@@ -1,0 +1,2437 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mozen Academy — обучение менеджеров</title>
+  <style>
+    :root {
+      --bg: #070b14;
+      --bg-soft: #0d1424;
+      --panel: rgba(14, 21, 37, 0.72);
+      --panel-strong: rgba(18, 26, 45, 0.92);
+      --line: rgba(255,255,255,0.08);
+      --line-strong: rgba(255,255,255,0.16);
+      --text: #f5f7fb;
+      --muted: #a8b3c9;
+      --accent: #ff4d4f;
+      --accent-2: #6ea8ff;
+      --success: #57d39b;
+      --warn: #ffd166;
+      --shadow: 0 22px 70px rgba(0,0,0,0.35);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --max: 1420px;
+      --sidebar: 260px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 10% 10%, rgba(255,77,79,0.14), transparent 25%),
+        radial-gradient(circle at 100% 0%, rgba(110,168,255,0.16), transparent 28%),
+        linear-gradient(180deg, #08101c 0%, #060912 52%, #05070d 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; }
+
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      width: 0;
+      background: linear-gradient(90deg, var(--accent), #ff8a4d, var(--accent-2));
+      z-index: 2000;
+      box-shadow: 0 0 22px rgba(255,77,79,0.55);
+    }
+
+    .shell {
+      max-width: calc(var(--max) + 48px);
+      margin: 0 auto;
+      padding: 28px 24px 120px;
+      display: grid;
+      grid-template-columns: var(--sidebar) minmax(0, 1fr);
+      gap: 24px;
+    }
+
+    .glass {
+      background: linear-gradient(180deg, rgba(17, 24, 39, 0.86), rgba(10, 15, 27, 0.82));
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 20px;
+      height: fit-content;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .brand {
+      padding: 16px 16px 18px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      border: 1px solid var(--line);
+    }
+
+    .brand small {
+      display: block;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 11px;
+      margin-bottom: 10px;
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 22px;
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+
+    .brand p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .sidebar nav {
+      display: grid;
+      gap: 10px;
+    }
+
+    .sidebar nav a {
+      padding: 12px 14px;
+      border-radius: 14px;
+      color: var(--muted);
+      border: 1px solid transparent;
+      background: rgba(255,255,255,0.02);
+      transition: 180ms ease;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .sidebar nav a:hover,
+    .sidebar nav a.active {
+      color: var(--text);
+      border-color: rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      transform: translateX(2px);
+    }
+
+    .sidebar-stat {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .sidebar-stat div {
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--line);
+    }
+
+    .sidebar-stat strong {
+      display: block;
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+
+    .sidebar-stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .main {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 34px;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: -120px auto auto -120px;
+      width: 280px;
+      height: 280px;
+      background: radial-gradient(circle, rgba(255,77,79,0.26), transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -110px;
+      bottom: -120px;
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, rgba(110,168,255,0.2), transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-top {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: flex-start;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--line);
+      color: #dce4f7;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      font-size: clamp(34px, 5vw, 62px);
+      line-height: 0.95;
+      margin: 18px 0 16px;
+      max-width: 900px;
+      letter-spacing: -0.04em;
+    }
+
+    .hero p.lead {
+      max-width: 880px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.7;
+      margin: 0 0 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn, .ghost-btn {
+      border: 0;
+      cursor: pointer;
+      font: inherit;
+      transition: 180ms ease;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 18px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--accent), #ff7a45);
+      color: white;
+      font-weight: 700;
+      box-shadow: 0 14px 30px rgba(255,77,79,0.2);
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+
+    .ghost-btn {
+      padding: 13px 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .ghost-btn:hover {
+      background: rgba(255,255,255,0.08);
+      transform: translateY(-1px);
+    }
+
+    .hero-grid {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .source-card, .control-card {
+      padding: 20px 22px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--line);
+    }
+
+    .source-card h3, .control-card h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .source-card p, .control-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
+    .source-copy {
+      display: grid;
+      gap: 10px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .stat {
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--line);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 30px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .search-wrap {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 220px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 16px 18px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      outline: none;
+      font: inherit;
+    }
+
+    .switches {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      cursor: pointer;
+      user-select: none;
+      font-size: 13px;
+    }
+
+    .pill input { accent-color: var(--accent); }
+
+    .navigator {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .nav-card {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 152px;
+      transition: 180ms ease;
+    }
+
+    .nav-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--line-strong);
+    }
+
+    .nav-card span {
+      color: #d6def2;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .nav-card strong {
+      font-size: 20px;
+      line-height: 1.05;
+    }
+
+    .nav-card small {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .module {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      scroll-margin-top: 16px;
+    }
+
+    .module-head {
+      padding: 28px;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: flex-start;
+    }
+
+    .module-head h2 {
+      margin: 14px 0 10px;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+
+    .module-subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.65;
+      max-width: 780px;
+    }
+
+    .module-mark {
+      min-width: 170px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: flex-end;
+    }
+
+    .module-index {
+      font-size: 64px;
+      line-height: 0.9;
+      letter-spacing: -0.08em;
+      color: rgba(255,255,255,0.16);
+      font-weight: 800;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.09);
+      font-size: 12px;
+      color: #d6def2;
+    }
+
+    .module-grid, .training-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .info-card, .train-card, .notes-card, .transcript, .quiz-card {
+      padding: 24px;
+    }
+
+    .info-card h3, .train-card h3, .notes-card h3, .transcript h3, .quiz-card h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      line-height: 1.15;
+    }
+
+    .card-kicker {
+      color: #d8e2ff;
+      opacity: 0.9;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 11px;
+      margin-bottom: 10px;
+    }
+
+    .info-card p, .train-card p, .notes-card p, .transcript p, .quiz-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+      font-size: 15px;
+    }
+
+    .bullet-list, .ordered-list {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .bullet-list li, .ordered-list li {
+      margin-bottom: 10px;
+      color: #edf2ff;
+    }
+
+    .notes-head, .transcript-head, .quiz-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .save-pill {
+      font-size: 12px;
+      color: var(--muted);
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      white-space: nowrap;
+    }
+
+    textarea.module-notes {
+      width: 100%;
+      min-height: 170px;
+      resize: vertical;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+      padding: 18px;
+      color: var(--text);
+      font: inherit;
+      line-height: 1.65;
+      outline: none;
+    }
+
+    .transcript .lead-copy {
+      margin-bottom: 18px;
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--line);
+    }
+
+    .details-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .detail-card {
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+      overflow: hidden;
+    }
+
+    .detail-card summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 18px 20px;
+      font-weight: 700;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .detail-card summary::-webkit-details-marker { display: none; }
+
+    .detail-card summary::after {
+      content: "+";
+      font-size: 22px;
+      color: var(--muted);
+      transition: 180ms ease;
+    }
+
+    .detail-card[open] summary::after {
+      transform: rotate(45deg);
+      color: var(--text);
+    }
+
+    .detail-body {
+      padding: 0 20px 20px;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+    }
+
+    .topic-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .topic-card {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--line);
+    }
+
+    .topic-card h4 {
+      margin: 0 0 10px;
+      font-size: 17px;
+      line-height: 1.35;
+      color: var(--text);
+    }
+
+    .mini-title {
+      margin: 18px 0 10px;
+      font-size: 14px;
+      line-height: 1.4;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #d8e2ff;
+    }
+
+    .label {
+      color: #eef2ff;
+      font-weight: 700;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 16px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+    }
+
+    table.academy-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 680px;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .academy-table th,
+    .academy-table td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .academy-table th {
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    mark {
+      background: rgba(255, 209, 102, 0.18);
+      color: #fff7d6;
+      padding: 0 4px;
+      border-radius: 4px;
+    }
+
+    .quiz-questions {
+      display: grid;
+      gap: 16px;
+    }
+
+    .quiz-item {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--line);
+    }
+
+    .quiz-item h4 {
+      margin: 0 0 12px;
+      font-size: 16px;
+      line-height: 1.45;
+    }
+
+    .quiz-options {
+      display: grid;
+      gap: 10px;
+    }
+
+    .quiz-option {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: 150ms ease;
+      color: #eef2ff;
+      line-height: 1.5;
+    }
+
+    .quiz-option:hover {
+      border-color: var(--line-strong);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .quiz-option.correct {
+      border-color: rgba(87,211,155,0.45);
+      background: rgba(87,211,155,0.12);
+    }
+
+    .quiz-option.wrong {
+      border-color: rgba(255,77,79,0.45);
+      background: rgba(255,77,79,0.12);
+    }
+
+    .quiz-option input {
+      margin-top: 3px;
+      accent-color: var(--accent);
+    }
+
+    .quiz-result {
+      margin-top: 16px;
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--line);
+      color: var(--text);
+      display: none;
+    }
+
+    .quiz-result.visible { display: block; }
+
+    .hidden-by-search { display: none !important; }
+    .full-only.compact-hidden { display: none !important; }
+
+    .completed .module-head {
+      border-color: rgba(87,211,155,0.32);
+      box-shadow: 0 22px 70px rgba(0,0,0,0.35), 0 0 0 1px rgba(87,211,155,0.18) inset;
+    }
+
+    .scroll-top {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: rgba(10,15,27,0.84);
+      color: var(--text);
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transition: 180ms ease;
+      z-index: 1000;
+    }
+
+    .scroll-top.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    @media (max-width: 1180px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        position: relative;
+        top: 0;
+      }
+      .navigator {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .shell {
+        padding: 16px 14px 100px;
+      }
+      .hero, .module-head, .info-card, .train-card, .notes-card, .transcript, .quiz-card {
+        padding: 20px;
+      }
+      .module-grid, .training-grid, .topic-grid, .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      .module-head {
+        flex-direction: column;
+      }
+      .module-mark {
+        align-items: flex-start;
+        min-width: 0;
+      }
+      .module-index {
+        font-size: 48px;
+      }
+      .navigator {
+        grid-template-columns: 1fr;
+      }
+      .hero h1 {
+        font-size: 34px;
+        line-height: 1.02;
+      }
+    }
+  </style>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --bg-soft: #eef2f7;
+      --panel: #ffffff;
+      --panel-soft: #f8fafc;
+      --panel-strong: #0f172a;
+      --line: #e2e8f0;
+      --line-strong: #cbd5e1;
+      --text: #0f172a;
+      --muted: #64748b;
+      --muted-strong: #475569;
+      --accent: #10b981;
+      --accent-2: #3b82f6;
+      --accent-soft: #ecfdf5;
+      --success: #22c55e;
+      --warn: #f59e0b;
+      --danger: #ef4444;
+      --shadow: 0 1px 3px rgba(15,23,42,0.06), 0 18px 42px rgba(15,23,42,0.08);
+      --shadow-soft: 0 1px 2px rgba(15,23,42,0.04), 0 10px 28px rgba(15,23,42,0.06);
+      --max: 1440px;
+      --sidebar: 284px;
+    }
+
+    :focus-visible {
+      outline: 3px solid rgba(59,130,246,0.18);
+      outline-offset: 2px;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at 0% 0%, rgba(16,185,129,0.08), transparent 26%),
+        radial-gradient(circle at 100% 0%, rgba(59,130,246,0.09), transparent 32%),
+        linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+      color: var(--text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection { background: rgba(16,185,129,0.18); }
+
+    .progress-bar {
+      height: 3px;
+      background: linear-gradient(90deg, #0f172a, #334155);
+      box-shadow: 0 0 12px rgba(15,23,42,0.16);
+    }
+
+    .shell {
+      max-width: calc(var(--max) + 40px);
+      padding: 20px 20px 96px;
+      align-items: start;
+    }
+
+    .glass {
+      background: var(--panel);
+      border-color: var(--line);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: none;
+    }
+
+    .sidebar {
+      min-height: calc(100vh - 40px);
+      padding: 0;
+      gap: 0;
+      overflow: auto;
+    }
+
+    .brand {
+      padding: 22px 20px 20px;
+      border-radius: 0;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border: 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand strong { color: var(--text); }
+    .brand p { color: var(--muted); }
+
+    .sidebar nav {
+      gap: 6px;
+      padding: 12px;
+    }
+
+    .sidebar nav a {
+      color: var(--muted);
+      background: transparent;
+      font-weight: 500;
+    }
+
+    .sidebar nav a:hover {
+      color: var(--text);
+      border-color: var(--line);
+      background: var(--panel-soft);
+      transform: translateX(3px);
+    }
+
+    .sidebar nav a.active {
+      color: #ffffff;
+      border-color: #0f172a;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      box-shadow: 0 10px 20px rgba(15,23,42,0.18);
+      transform: none;
+    }
+
+    .sidebar-stat {
+      padding: 0 12px 12px;
+    }
+
+    .sidebar-stat div {
+      background: var(--panel-soft);
+      border-color: var(--line);
+    }
+
+    .sidebar-stat strong { color: var(--text); }
+    .sidebar-stat span { color: var(--muted); }
+
+    .main { gap: 24px; }
+
+    .hero {
+      background:
+        radial-gradient(circle at top left, rgba(16,185,129,0.24), transparent 30%),
+        radial-gradient(circle at top right, rgba(59,130,246,0.18), transparent 28%),
+        linear-gradient(135deg, #0f172a 0%, #1e293b 54%, #0f172a 100%);
+      border-color: rgba(15,23,42,0.05);
+      box-shadow: 0 20px 48px rgba(15,23,42,0.18);
+      color: #ffffff;
+    }
+
+    .hero::before {
+      background: radial-gradient(circle, rgba(16,185,129,0.24), transparent 72%);
+    }
+
+    .hero::after {
+      background: radial-gradient(circle, rgba(59,130,246,0.22), transparent 72%);
+    }
+
+    .eyebrow {
+      background: #0f172a;
+      border-color: #0f172a;
+      color: #ffffff;
+    }
+
+    .hero .eyebrow {
+      background: rgba(255,255,255,0.09);
+      border-color: rgba(255,255,255,0.16);
+      color: #e2e8f0;
+    }
+
+    .hero h1 { color: #ffffff; }
+    .hero p.lead { color: #cbd5e1; }
+
+    .btn,
+    .ghost-btn {
+      border: 1px solid transparent;
+    }
+
+    .btn {
+      background: #ffffff;
+      color: #0f172a;
+      box-shadow: 0 14px 30px rgba(2,6,23,0.16);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 20px 34px rgba(2,6,23,0.2);
+    }
+
+    .ghost-btn {
+      background: #ffffff;
+      color: var(--text);
+      border-color: var(--line);
+      box-shadow: 0 1px 2px rgba(15,23,42,0.04);
+    }
+
+    .ghost-btn:hover {
+      background: var(--panel-soft);
+      border-color: var(--line-strong);
+      transform: translateY(-2px);
+    }
+
+    .hero .ghost-btn {
+      background: rgba(255,255,255,0.08);
+      color: #e2e8f0;
+      border-color: rgba(255,255,255,0.18);
+      box-shadow: none;
+    }
+
+    .hero .ghost-btn:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.24);
+    }
+
+    .hero-grid { gap: 18px; }
+
+    .source-card,
+    .control-card {
+      background: #ffffff;
+      border: 1px solid rgba(226,232,240,0.9);
+      box-shadow: 0 12px 30px rgba(15,23,42,0.08);
+      backdrop-filter: none;
+    }
+
+    .stat {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      backdrop-filter: blur(10px);
+    }
+
+    .source-card h3,
+    .control-card h3 {
+      color: var(--text);
+    }
+
+    .stat strong {
+      color: #ffffff;
+    }
+
+    .source-card p,
+    .control-card p {
+      color: var(--muted-strong);
+    }
+
+    .stat span {
+      color: #cbd5e1;
+    }
+
+    .source-card .mini-title,
+    .control-card .mini-title {
+      color: var(--muted-strong);
+    }
+
+    .source-card .bullet-list,
+    .source-card .ordered-list,
+    .control-card .bullet-list,
+    .control-card .ordered-list {
+      color: var(--text);
+    }
+
+    .source-card .bullet-list li,
+    .source-card .ordered-list li,
+    .control-card .bullet-list li,
+    .control-card .ordered-list li {
+      color: var(--muted-strong);
+    }
+
+    .source-card .label,
+    .control-card .label {
+      color: var(--text);
+    }
+
+    .control-card .search-box input {
+      border-color: var(--line);
+      background: var(--panel-soft);
+      color: var(--text);
+      transition: 180ms ease;
+    }
+
+    .control-card .search-box input::placeholder {
+      color: var(--muted);
+    }
+
+    .control-card .search-box input:focus {
+      border-color: rgba(59,130,246,0.38);
+      background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(59,130,246,0.12);
+    }
+
+    .control-card .pill {
+      background: #ffffff;
+      border-color: var(--line);
+      color: var(--muted-strong);
+    }
+
+    .control-card .pill:hover {
+      background: var(--panel-soft);
+      border-color: var(--line-strong);
+    }
+
+    .control-card .pill input {
+      accent-color: var(--accent);
+    }
+
+    .navigator { gap: 16px; }
+
+    .nav-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--accent), var(--accent-2));
+      opacity: 0;
+      transition: 180ms ease;
+    }
+
+    .nav-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--line-strong);
+      box-shadow: var(--shadow);
+    }
+
+    .nav-card:hover::before { opacity: 1; }
+    .nav-card span { color: var(--muted); font-weight: 700; }
+    .nav-card strong { color: var(--text); }
+    .nav-card small { color: var(--muted); }
+
+    .module {
+      gap: 20px;
+      scroll-margin-top: 20px;
+    }
+
+    .module-head {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .module-head::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 5px;
+      background: linear-gradient(180deg, var(--accent), var(--accent-2));
+    }
+
+    .module-head h2 { color: var(--text); }
+    .module-subtitle { color: var(--muted); }
+    .module-index { color: rgba(15,23,42,0.09); }
+
+    .chip {
+      background: var(--panel-soft);
+      border-color: var(--line);
+      color: var(--muted-strong);
+      font-weight: 600;
+    }
+
+    .info-card h3,
+    .train-card h3,
+    .notes-card h3,
+    .transcript h3,
+    .quiz-card h3 {
+      color: var(--text);
+    }
+
+    .card-kicker {
+      color: var(--muted);
+      opacity: 1;
+      font-weight: 700;
+    }
+
+    .info-card p,
+    .train-card p,
+    .notes-card p,
+    .transcript p,
+    .quiz-card p {
+      color: var(--muted);
+    }
+
+    .bullet-list,
+    .ordered-list {
+      color: var(--text);
+    }
+
+    .bullet-list li,
+    .ordered-list li {
+      color: var(--text);
+    }
+
+    .bullet-list li::marker,
+    .ordered-list li::marker {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .save-pill {
+      color: #047857;
+      border-color: rgba(16,185,129,0.22);
+      background: var(--accent-soft);
+      font-weight: 600;
+    }
+
+    textarea.module-notes {
+      background: #ffffff;
+      color: var(--text);
+      transition: 180ms ease;
+    }
+
+    textarea.module-notes:focus {
+      border-color: rgba(59,130,246,0.4);
+      box-shadow: 0 0 0 4px rgba(59,130,246,0.12);
+    }
+
+    .transcript .lead-copy {
+      background: var(--panel-soft);
+      border-color: var(--line);
+    }
+
+    .detail-card {
+      background: #ffffff;
+      border-color: var(--line);
+    }
+
+    .detail-card summary {
+      color: var(--text);
+      background: #ffffff;
+    }
+
+    .detail-card summary::after { color: var(--muted); }
+    .detail-card[open] summary::after { color: var(--accent-2); }
+
+    .detail-body {
+      color: var(--muted-strong);
+      border-top-color: var(--line);
+      background: #ffffff;
+    }
+
+    .topic-card {
+      background: var(--panel-soft);
+      border-color: var(--line);
+    }
+
+    .topic-card h4 { color: var(--text); }
+
+    .mini-title {
+      color: var(--muted-strong);
+      font-weight: 700;
+    }
+
+    .label { color: var(--text); }
+
+    table.academy-table {
+      background: #ffffff;
+    }
+
+    .academy-table th,
+    .academy-table td {
+      border-bottom-color: var(--line);
+    }
+
+    .academy-table th {
+      background: var(--panel-soft);
+      color: var(--muted-strong);
+    }
+
+    .academy-table td { color: var(--muted-strong); }
+    .academy-table tr:last-child td { border-bottom: 0; }
+
+    mark {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .quiz-item {
+      background: var(--panel-soft);
+      border-color: var(--line);
+    }
+
+    .quiz-item h4 { color: var(--text); }
+
+    .quiz-option {
+      background: #ffffff;
+      border-color: var(--line);
+      color: var(--text);
+    }
+
+    .quiz-option:hover {
+      border-color: var(--line-strong);
+      background: #ffffff;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .quiz-option.correct {
+      border-color: rgba(34,197,94,0.35);
+      background: rgba(34,197,94,0.12);
+    }
+
+    .quiz-option.wrong {
+      border-color: rgba(239,68,68,0.35);
+      background: rgba(239,68,68,0.1);
+    }
+
+    .quiz-result {
+      background: var(--panel-soft);
+      border-color: var(--line);
+      color: var(--text);
+    }
+
+    .completed .module-head {
+      border-color: rgba(16,185,129,0.34);
+      box-shadow: 0 0 0 4px rgba(16,185,129,0.08), var(--shadow);
+    }
+
+    .scroll-top {
+      width: 48px;
+      height: 48px;
+      border: 0;
+      background: #0f172a;
+      color: #ffffff;
+      box-shadow: 0 16px 34px rgba(15,23,42,0.2);
+    }
+
+    @media (max-width: 1180px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: relative;
+        top: 0;
+        min-height: auto;
+        overflow: visible;
+      }
+
+      .navigator {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .shell {
+        padding: 12px 12px 84px;
+      }
+
+      .module-mark {
+        width: 100%;
+      }
+
+      .notes-head,
+      .transcript-head,
+      .quiz-head,
+      .hero-top,
+      .search-wrap {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .sidebar-stat {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress-bar" id="progressBar"></div>
+  <button class="scroll-top" id="scrollTopBtn" aria-label="Наверх">↑</button>
+
+  <div class="shell">
+    <aside class="sidebar glass">
+      <div class="brand">
+        <small>Внутренний портал</small>
+        <strong>Mozen Academy</strong>
+        <p>Обучающий сайт для менеджеров: от базовой логики продажи до полного конспекта по направлениям.</p>
+      </div>
+
+      <nav id="sideNav">
+        <a href="#taxi" data-side="taxi">Такси</a><a href="#metal" data-side="metal">Ломозаготовка</a><a href="#auto" data-side="auto">Авто</a><a href="#beauty" data-side="beauty">Бьюти</a><a href="#registry" data-side="registry">Реестры / вторсырье / дикоросы</a>
+      </nav>
+
+      <div class="sidebar-stat">
+        <div>
+          <strong>5</strong>
+          <span>направлений в одной системе обучения</span>
+        </div>
+        <div>
+          <strong>25</strong>
+          <span>контрольных вопросов для закрепления</span>
+        </div>
+      </div>
+
+      <div class="sidebar-stat">
+        <div>
+          <strong>2</strong>
+          <span>режима: быстро перед звонком и полное погружение</span>
+        </div>
+        <div>
+          <strong>∞</strong>
+          <span>заметок, которые сохраняются локально</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <section class="hero glass" id="top">
+        <div class="hero-top">
+          <div>
+            <div class="eyebrow">Mozen • обучение менеджеров</div>
+            <h1>Сайт-академия по продуктам Mozen для продаж и онбординга</h1>
+            <div class="hero-actions">
+              <a class="btn" href="#modules">Перейти к модулям</a>
+              <button class="ghost-btn" id="expandAllBtn">Раскрыть все конспекты</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-grid">
+          <div class="source-card searchable">
+            <h3>Основа сайта</h3>
+            <div class="source-copy"><p class="text searchable">Привет, коллега, если ты видишь этот текст, значит ты в начале увлекательного пути погружения в продукты компании Mozen.</p><p class="text searchable">Этот материал — результат нашей совместной работы. Мы собрали воедино все, что нужно знать о продуктах Mozen, чтобы продавать их профессионально, уверенно и с глубоким пониманием потребностей клиента. Здесь нет случайной информации — только то, что реально работает в переговорах и закрывает сделки. Почему это важно?</p><p class="text searchable">“Мы не просто сервис выплат. Мы — экосистема, которая закрывает ключевые боли бизнеса: налоговые риски, потерю ключевых исполнителей, кассовые разрывы, административный хаос. Каждый наш продукт создавался под конкретную отрасль с ее уникальным регулированием и экономикой. Мы продаем не переводы, а спокойствие, защиту, управляемость и рост”.</p><h4 class="mini-title searchable">Как работать с этим материалом? Каждый блок построен по единому принципу:</h4><ul class="bullet-list"><li class="searchable">Ценностное предложение — что мы продаем и почему это важно.</li><li class="searchable">Портрет клиента и его боли — чтобы ты точно понимал, с кем говоришь.</li><li class="searchable">Наши решения — как мы закрываем эти боли, с продающими аргументами.</li><li class="searchable">Алгоритм разговора — готовая воронка для диалога.</li><li class="searchable">Резюме — ключевые точки, которые нужно запомнить.</li><li class="searchable">В конце ты найдешь тест — 5 вопросов по каждому блоку. Он поможет проверить, насколько прочно ты усвоил материал, и подготовиться к реальным встречам. Мы не просто учимся — мы вооружаемся. Поехали.</li></ul></div>
+          </div>
+          <div class="control-card">
+            <h3>Как использовать</h3>
+            <p>Открой нужное направление, пройди блок “Быстро перед звонком”, посмотри алгоритм разговора, а затем закрепи материал через тест. Для руководителя этот сайт можно использовать как базу онбординга и внутренний стандарт аргументации.</p>
+
+            <div class="search-wrap">
+              <div class="search-box">
+                <input id="globalSearch" type="text" placeholder="Поиск по сайту: агентский договор, ПСА, номинальный счет..." />
+              </div>
+              <div class="switches">
+                <label class="pill"><input type="checkbox" id="compactMode" /> Компактный режим</label>
+                <label class="pill"><input type="checkbox" id="hideCompleted" /> Скрыть изученные</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat"><strong>5</strong><span>ключевых направлений: такси, лом, авто, бьюти и универсальный кабинет.</span></div>
+          <div class="stat"><strong>25</strong><span>вопросов для самопроверки прямо внутри страницы.</span></div>
+          <div class="stat"><strong>1</strong><span>единый формат обучения: боли, аргументы, алгоритм разговора, резюме.</span></div>
+          <div class="stat"><strong>HTML</strong><span>одним файлом — удобно хранить, отправлять и размещать во внутреннем контуре.</span></div>
+        </div>
+      </section>
+
+      <section class="navigator" id="modules">
+        
+<a class="nav-card glass" href="#taxi" data-nav="taxi">
+  <span>Направление 01</span>
+  <strong>Такси</strong>
+  <small>Продаем не переводы, а управляемость, налоговую чистоту и удержание водителей.</small>
+</a>
+
+<a class="nav-card glass" href="#metal" data-nav="metal">
+  <span>Направление 02</span>
+  <strong>Ломозаготовка</strong>
+  <small>Здесь продает не скорость выплаты, а чувство защищенности клиента перед регулятором.</small>
+</a>
+
+<a class="nav-card glass" href="#auto" data-nav="auto">
+  <span>Направление 03</span>
+  <strong>Авто</strong>
+  <small>Автодилеру важны 24/7 сделки, отказ от налички и прозрачность выплат в сети салонов.</small>
+</a>
+
+<a class="nav-card glass" href="#beauty" data-nav="beauty">
+  <span>Направление 04</span>
+  <strong>Бьюти</strong>
+  <small>Здесь продукт продается через снижение рисков, сохранение мастеров и управляемую легализацию.</small>
+</a>
+
+<a class="nav-card glass" href="#registry" data-nav="registry">
+  <span>Направление 05</span>
+  <strong>Реестры / вторсырье / дикоросы</strong>
+  <small>Стартовая точка для клиентов без тяжелой интеграции и для сезонных, неклассифицированных отраслей.</small>
+</a>
+
+      </section>
+
+      
+    <section class="module" id="taxi" data-module="taxi">
+      <div class="module-head glass">
+        <div>
+          <div class="eyebrow">Направление 01</div>
+          <h2>Такси: от выплат к экосистеме</h2>
+          <p class="module-subtitle searchable">Продаем не переводы, а управляемость, налоговую чистоту и удержание водителей.</p>
+          <div class="chip-row"><span class="chip">24/7 выплаты</span><span class="chip">Агентская модель</span><span class="chip">Фискализация</span><span class="chip">Удержание водителей</span></div>
+        </div>
+        <div class="module-mark">
+          <div class="module-index">01</div>
+          <button class="ghost-btn mark-complete" data-target="taxi">Отметить как изученное</button>
+        </div>
+      </div>
+
+      <div class="module-grid">
+        <article class="info-card glass searchable">
+          <h3>Кому продаем</h3>
+          <p>Таксопарки и диспетчерские с выплатами водителям, рисками по налоговой базе и задачей удержания водителей.</p>
+        </article>
+        <article class="info-card glass searchable">
+          <h3>Что продаем</h3>
+          <p>Mozen Taxi = моментальные выплаты + агентский договор + фискализация + аналитика + сервисная экосистема.</p>
+        </article>
+      </div>
+
+      <div class="training-grid">
+        <article class="train-card glass searchable">
+          <div class="card-kicker">Быстро перед звонком</div>
+          <h3>Боли клиента</h3>
+          <ul class="bullet-list"><li>Водители ждут деньги с таксометра и уходят туда, где выплаты быстрее.</li><li>Без агентской модели налоговая может считать доходом парка весь оборот агрегатора.</li><li>Комиссии парка нужно фискализировать, иначе штрафы и претензии.</li><li>Парку нужен не только платеж, но и удержание, поддержка, страхование, банк.</li></ul>
+        </article>
+        <article class="train-card glass searchable">
+          <div class="card-kicker">Сильные аргументы</div>
+          <h3>Что говорить</h3>
+          <ul class="bullet-list"><li>Моментальные выплаты 24/7 усиливают лояльность водителей и снижают текучку.</li><li>Агентский договор легализует схему: доход парка = его комиссия, а не весь поток.</li><li>Интеграция с Atoll закрывает фискализацию комиссии.</li><li>Реферальная программа и аналитика превращают продукт в инструмент роста парка.</li><li>Личный менеджер и экосистема сервисов дают сервисность, которой не хватает у Яндекса.</li></ul>
+        </article>
+      </div>
+
+      <div class="training-grid">
+        <article class="train-card glass searchable">
+          <div class="card-kicker">Алгоритм разговора</div>
+          <h3>Как вести диалог</h3>
+          <ol class="ordered-list"><li>Понять, как сейчас водитель получает деньги с таксометра.</li><li>Проверить, есть ли у парка агентские договоры и как он защищает налоговую базу.</li><li>Уточнить, фискализируется ли комиссия парка.</li><li>Спросить, как парк удерживает и привлекает водителей.</li><li>Допродать экосистему: страхование, банк, пополнение таксометра, бухгалтерскую поддержку.</li></ol>
+        </article>
+        <article class="train-card glass searchable">
+          <div class="card-kicker">Нужно запомнить</div>
+          <h3>Суть блока</h3>
+          <ul class="bullet-list"><li>Ключевой якорь — агентский договор.</li><li>Продукт продается через безопасность и сервисность.</li><li>MozenLite открывает смежные сегменты: курьеры, аутсорс, нерегулярные исполнители.</li></ul>
+        </article>
+      </div>
+
+      <article class="transcript glass searchable full-only">
+        <div class="transcript-head">
+          <div>
+            <div class="card-kicker">Полный конспект</div>
+            <h3>Материал из лекции</h3>
+          </div>
+          <button class="ghost-btn section-toggle" data-mode="expand">Раскрыть все</button>
+        </div>
+        <div class="lead-copy"><p class="text searchable">Наш продукт Mozen Taxi вырос из простой, но гениальной идеи. Основатель компании Олег Маликович, сам бывший водитель Uber, столкнулся с главной болью таксистов: деньги за заказы зависают на виртуальном счете таксометра, и чтобы их получить, нужно ждать, пока парк сделает перевод. Раньше это были долгие часы, а то и дни.</p><p class="text searchable">Мы решили проблему моментальными выплатами. Но сегодня рынок изменился. Просто «кидать деньги» недостаточно. Теперь Mozen Taxi — это полноценная ERP для таксопарка: автоматизация выплат + юридическая защита + фискализация + инструменты для роста + экосистема сервисов.</p><p class="text searchable">Наша задача — продавать не просто переводы, а безопасность и управляемость бизнеса клиента. Потому что таксопарк, который работает с нами, защищен от налоговых рисков, банковских блокировок и умеет удерживать водителей.</p></div>
+        <div class="details-stack">
+    <details class="detail-card" open id="2-портрет-клиента-кто-наш-герой">
+      <summary>2. Портрет клиента: Кто наш герой?</summary>
+      <div class="detail-body"><div class="section-copy"><p class="text searchable">Наши клиенты — таксопарки. Но в IT-реальности это диспетчерские — юридические лица, у которых есть договор с агрегатором заказов (Яндекс.Go, Drivee, CityMobile и др.). Они объединяют водителей и получают комиссию.</p><h4 class="mini-title searchable">Главные боли таксопарка:</h4><ul class="bullet-list"><li class="searchable">Деньги от агрегатора приходят на расчетный счет парка с задержкой (раз в день, неделю, месяц), а водители хотят получать заработанное сразу после смены.</li><li class="searchable">Если просто переводить деньги водителям без оснований, налоговая может посчитать всю выручку агрегатора доходом парка и доначислить налоги.</li><li class="searchable">Водители — главный актив. Их нужно привлекать и удерживать, иначе парк умрет.</li><li class="searchable">Все операции требуют фискализации (чеков), иначе штрафы и риск потери лицензии.</li><li class="searchable">Наш ответ: мы закрываем все эти боли в одном окне.</li></ul></div></div>
+    </details>
+    
+    <details class="detail-card"  id="3-ключевые-точки-боли-и-наши-решения">
+      <summary>3. Ключевые «точки боли» и наши решения</summary>
+      <div class="detail-body"><div class="topic-grid">
+            <article class="topic-card searchable">
+              <h4>3.1. Моментальные выплаты: «Деньги должны быть здесь и сейчас»</h4>
+              <div class="topic-copy"><p class="text searchable"><span class="label">Как устроено без нас:</span> Пассажир платит 1000 руб. → Яндекс берет комиссию → парк берет комиссию → на виртуальный счет водителя попадает, условно, 700 руб. Эти деньги не на карте, а в таксометре. Раньше, чтобы их вывести, водитель должен был просить парк, парк делал перевод, который шел часы (а в выходные — не шел вообще).</p><p class="text searchable"><span class="label">Наше решение:</span> Mozen Taxi обеспечивает моментальные выплаты с баланса таксометра на карту водителя 24/7. Водитель нажимает кнопку — деньги у него на карте через пару минут. Это наш фундамент.</p><p class="text searchable"><span class="label">Продающий аргумент:</span> </p><p class="text searchable">«Ваши водители будут лояльны парку, потому что они получают деньги тогда, когда им нужно. Это повышает их привязанность и снижает текучку».</p></div>
+            </article>
+            
+            <article class="topic-card searchable">
+              <h4>3.2. Юридическая основа: Агентский договор — «скрижаль такси»</h4>
+              <div class="topic-copy"><p class="text searchable"><span class="label">Проблема:</span> Если парк получает деньги от Яндекса и переводит их водителям, налоговая видит весь оборот (сотни миллионов) и хочет налог со всей суммы.</p><p class="text searchable">Наше решение — агентский договор.
+Этот договор переводит отношения из трудовых в партнерские. Парк становится агентом водителя: он просто передает заработанные водителем деньги, а своим доходом считает только свою комиссию.</p><h4 class="mini-title searchable">Что мы даем:</h4><ul class="bullet-list"><li class="searchable">Бесплатный шаблон агентского договора, разработанный юристами.</li><li class="searchable">Сервис eDGWR (электронный договор) в приложении Mozen Mobile. Каждый водитель обязан подписать договор перед первой выплатой, иначе система не даст перевести деньги.</li><li class="searchable">Идентификатор — номер телефона, все просто.</li></ul><p class="text searchable"><span class="label">Продающий аргумент:</span> </p><p class="text searchable">«С нашим агентским договором вы убираете налоговую базу с огромных сумм. Ваш реальный доход — только комиссия. А договор подписывается в пару кликов внутри приложения — никакой бумажной волокиты».</p></div>
+            </article>
+            
+            <article class="topic-card searchable">
+              <h4>3.3. Фискализация: Чек за каждую комиссию</h4>
+              <div class="topic-copy"><p class="text searchable"><span class="label">Проблема:</span> Парк берет комиссию с водителя. Это услуга, за которую по закону нужно выдавать чек. Отсутствие чека = штрафы и риск претензий от налоговой.</p><p class="text searchable"><span class="label">Наше решение:</span> Интеграция с виртуальной кассой Atoll. Если клиент подключает эту кассу, каждая комиссия парка автоматически фискализируется, и чек отправляется куда следует.</p><p class="text searchable"><span class="label">Продающий аргумент:</span> </p><p class="text searchable">«Договор + кассовый чек — это ваша полная защита. Налоговая видит, что вы агент, а не владелец всей выручки. Банки не блокируют счета за непонятные транзакции».</p></div>
+            </article>
+            
+            <article class="topic-card searchable">
+              <h4>3.4. Бухгалтерская и правовая поддержка: «Налог-такси» рядом</h4>
+              <div class="topic-copy"><p class="text searchable">Мы не оставляем клиента один на один с бухгалтерией. У нас есть партнер — сервис «Налог-такси», узкоспециализированный консалтинг для таксопарков.</p><h4 class="mini-title searchable">Они помогают:</h4><ul class="bullet-list"><li class="searchable">открыть юрлицо и расчетный счет;</li><li class="searchable">настроить налоговую оптимизацию;</li><li class="searchable">выпустить недостающие документы;</li><li class="searchable">консультируют по сложным кейсам.</li></ul><p class="text searchable"><span class="label">Продающий аргумент:</span> </p><p class="text searchable">«Мы не просто даем инструмент, мы даем экспертизу. Если у клиента сложный вопрос по налогам или праву, мы подключаем лучших специалистов рынка такси».</p></div>
+            </article>
+            
+            <article class="topic-card searchable">
+              <h4>3.5. Удержание водителей: Реферальная программа и аналитика</h4>
+              <div class="topic-copy"><p class="text searchable">Боль:
+Водители — это кровь парка. Их нужно не только нанимать, но и удерживать, иначе парк пустеет.</p><h4 class="mini-title searchable">Наше решение:</h4><ul class="bullet-list"><li class="searchable">Реферальная программа. Водитель получает вознаграждение за приглашенного коллегу. Приглашенный тоже мотивирован оставаться — бонусная связка работает на удержание.</li><li class="searchable">Аналитика в личном кабинете. Парк видит, сколько денег прошло, какая комиссия собрана, какова динамика. Позволяет прогнозировать и управлять финансами.</li></ul><p class="text searchable"><span class="label">Продающий аргумент:</span> </p><p class="text searchable">«Мы помогаем вам сделать водителей партнерами по развитию бизнеса. Они сами приводят новых, и их интерес к стабильной работе растет. А аналитика дает полную картину денежных потоков — без сюрпризов».</p></div>
+            </article>
+            </div></div>
+    </details>
+    
+    <details class="detail-card"  id="4-экосистема-почему-мы-продаем-не-просто-выплаты">
+      <summary>4. Экосистема: Почему мы продаем не просто выплаты</summary>
+      <div class="detail-body"><div class="section-copy"><p class="text searchable">Сегодня Mozen Taxi — это набор взаимосвязанных сервисов, которые делают клиента «привязанным» к нам и защищенным со всех сторон.</p><div class="table-wrap"><table class="academy-table searchable"><thead><tr><th>Сервис</th><th>Зачем клиенту</th></tr></thead><tbody><tr><td>Пополнение таксометра</td><td>Оплата аренды, топлива, штрафов прямо из таксометра без вывода на карту. Удобно и быстро.</td></tr><tr><td>Страхование</td><td>ОСАГО и ОСГОП (обязательное страхование перевозчиков). Мы субброкеры, есть эксперт Ольга, которая подберет полис.</td></tr><tr><td>Банковские продукты</td><td>Расчетно-кассовое обслуживание, кредитование через Альфа-Банк. Преференции для клиентов Mozen.</td></tr><tr><td>Сервисная поддержка</td><td>Двухуровневая: техническая поддержка (Екатерина Одинцова и команда) + личные менеджеры для операционных и финансовых вопросов. Личный менеджер доступен голосом.</td></tr></tbody></table></div><p class="text searchable"><span class="label">Продающий аргумент:</span> </p><p class="text searchable">«Мы не просто очередной сервис выплат. Мы — единое окно, где парк получает все: от моментальных денег для водителя до страхования и кредита на развитие. И всегда есть человек, который возьмет трубку».</p></div></div>
+    </details>
+    
+    <details class="detail-card"  id="5-конкуренция-с-яндексом-наше-главное-преимущество">
+      <summary>5. Конкуренция с Яндексом: Наше главное преимущество</summary>
+      <div class="detail-body"><div class="section-copy"><p class="text searchable">Кто конкурент?
+Яндекс.Go — монополист рынка. Они могут демпинговать, навязывать свои банковские продукты и даже ввели налог 15% на оборот для тех, кто работает с выплатами не через Яндекс.Банк.</p><p class="text searchable">Почему клиенты выбирают нас, а не встроенные сервисы Яндекса?</p><p class="text searchable">Юридическая основа. У Яндекса можно подгрузить договор, но вы сами отвечаете за его корректность. Мы даем готовый шаблон и автоматическое подписание.</p><p class="text searchable">Фискализация. У Яндекса вы сами разбираетесь с кассой. У нас — готовая интеграция с Atoll.</p><p class="text searchable">Сервисность. В Яндексе дозвониться до человека практически невозможно. У нас есть личный менеджер, который берет трубку и решает вопросы.</p><p class="text searchable">Экосистема. Яндекс дает только выплаты и точечные сервисы. Мы даем страхование, банк, бухгалтерию, реферальную программу, аналитику.</p><p class="text searchable"><span class="label">Продающий аргумент:</span> </p><p class="text searchable">«Яндекс — это конструктор, который вы собираете сами, а потом остаетесь один на один с проблемами. Mozen — это комплексный сервис, где за вас уже все настроили, и всегда есть живой менеджер, который поможет».</p></div></div>
+    </details>
+    
+    <details class="detail-card"  id="6-новое-направление-mozenlite-для-нерегулярных-работников">
+      <summary>6. Новое направление: MozenLite — для нерегулярных работников</summary>
+      <div class="detail-body"><div class="section-copy"><h4 class="mini-title searchable">Внутри Mozen Taxi родился продукт для тех, у кого нет API с агрегаторами. Это MozenLite (ранее BroPays). Он подходит для выплат:</h4><ul class="bullet-list"><li class="searchable">курьерам (Яндекс.Еда, Достависта, Эбермаркет и др.);</li><li class="searchable">аутсорсинговым работникам;</li><li class="searchable">клининговым службам;</li><li class="searchable">любым компаниям, где люди работают нерегулярно и получают деньги нерегулярно.</li><li class="searchable">Как работает:
+Вносим данные получателя (ФИО, телефон, карта или СБП) — и делаем выплату. Без сложной интеграции.</li></ul><p class="text searchable"><span class="label">Продающий аргумент:</span> </p><p class="text searchable">«Это наш трамплин в смежные отрасли. Если клиент из такси, но у него есть и курьерский бизнес — мы можем закрыть оба направления».</p></div></div>
+    </details>
+    
+    <details class="detail-card"  id="7-структура-разговора-с-клиентом-алгоритм">
+      <summary>7. Структура разговора с клиентом (алгоритм)</summary>
+      <div class="detail-body"><div class="section-copy"><p class="text searchable">Когда вы общаетесь с потенциальным таксопарком, стройте диалог по этим шагам:</p><h4 class="mini-title searchable">Выясните текущую схему выплат:</h4><ul class="bullet-list"><li class="searchable">«Как ваши водители получают деньги с таксометра? Ждут, пока вы переведете, или у вас уже есть моментальные выплаты?»</li><li class="searchable">Если ждут — это боль, мы ее лечим.</li></ul><h4 class="mini-title searchable">Спросите про документы и налоги:</h4><ul class="bullet-list"><li class="searchable">«У вас с водителями подписаны агентские договоры? Как вы обосновываете перед налоговой, что весь поток — не ваш доход?»</li><li class="searchable">Если договоров нет или они «бумажные», показываем наше решение.</li></ul><p class="text searchable">Уточните про фискализацию:</p><p class="text searchable">«Вы выдаете чеки на комиссию, которую берете с водителей? Если нет — рискуете штрафами. У нас есть интеграция с кассой Atoll, все автоматически».</p><h4 class="mini-title searchable">Задайте вопрос про удержание водителей:</h4><ul class="bullet-list"><li class="searchable">«Как вы привлекаете новых водителей и удерживаете текущих?»</li><li class="searchable">Рассказываем про реферальную программу и аналитику.</li></ul><p class="text searchable">Предложите экосистему:</p><p class="text searchable">«Помимо выплат, у нас есть страхование, банковские продукты, пополнение таксометра и бухгалтерская поддержка. Вы можете получить все в одном месте».</p><p class="text searchable">Закройте на сервисности:</p><p class="text searchable">«И главное: ваш личный менеджер всегда на связи. В Яндексе такого нет».</p></div></div>
+    </details>
+    
+    <details class="detail-card"  id="8-резюме-что-запомнит">
+      <summary>8. Резюме: Что запомнить</summary>
+      <div class="detail-body"><div class="section-copy"><p class="text searchable">Mozen Taxi начинался с моментальных выплат, но сегодня это экосистема для управления таксопарком.</p><p class="text searchable">Агентский договор — ключевой инструмент, который снижает налоговую базу парка и легализует выплаты.</p><p class="text searchable">Интеграция с кассой Atoll закрывает вопросы фискализации.</p><p class="text searchable">Реферальная программа и аналитика помогают удерживать водителей — главный актив клиента.</p><p class="text searchable">Экосистема (страхование, банк, поддержка) делает нас сильнее конкурентов, особенно Яндекса, у которого нет такой сервисности.</p><p class="text searchable">MozenLite позволяет выходить на рынки смежных отраслей (курьеры, аутсорс).</p><p class="text searchable">Наша главная «фишка» — живой личный менеджер и комплексный подход. Мы продаем не просто выплаты, а спокойствие и защищенность бизнеса.</p></div></div>
+    </details>
+    </div>
+      </article>
+
+      <article class="quiz-card glass" data-quiz='[{&quot;q&quot;: &quot;Что является главным юридическим инструментом, снижающим налоговую базу парка?&quot;, &quot;options&quot;: [&quot;Договор аренды авто&quot;, &quot;Агентский договор&quot;, &quot;Договор займа&quot;, &quot;РКО в банке&quot;], &quot;answer&quot;: 1}, {&quot;q&quot;: &quot;Какой аргумент лучше всего продает моментальные выплаты таксопарку?&quot;, &quot;options&quot;: [&quot;Снижение стоимости рекламы&quot;, &quot;Ускорение найма бухгалтеров&quot;, &quot;Рост лояльности и удержание водителей&quot;, &quot;Отмена комиссий агрегатора&quot;], &quot;answer&quot;: 2}, {&quot;q&quot;: &quot;Что закрывает интеграция с Atoll в такси?&quot;, &quot;options&quot;: [&quot;Маркетинг парка&quot;, &quot;Фискализацию комиссии&quot;, &quot;Выдачу лицензий&quot;, &quot;Страхование ОСАГО&quot;], &quot;answer&quot;: 1}, {&quot;q&quot;: &quot;Что является главным отличием Mozen от встроенных сервисов Яндекса по лекции?&quot;, &quot;options&quot;: [&quot;Наличие экосистемы и живого менеджера&quot;, &quot;Бесплатные выплаты&quot;, &quot;Отсутствие документов&quot;, &quot;Собственный агрегатор заказов&quot;], &quot;answer&quot;: 0}, {&quot;q&quot;: &quot;Для кого подходит MozenLite?&quot;, &quot;options&quot;: [&quot;Только для таксопарков&quot;, &quot;Только для официальных дилеров&quot;, &quot;Для компаний с нерегулярными выплатами без сложной интеграции&quot;, &quot;Только для ломозаготовки&quot;], &quot;answer&quot;: 2}]'>
+        <div class="quiz-head">
+          <div>
+            <div class="card-kicker">Проверка знаний</div>
+            <h3>Мини-тест по блоку</h3>
+          </div>
+          <button class="ghost-btn run-quiz">Проверить ответы</button>
+        </div>
+        <div class="quiz-questions"></div>
+        <div class="quiz-result"></div>
+      </article>
+    </section>
+    
+    <section class="module" id="metal" data-module="metal">
+      <div class="module-head glass">
+        <div>
+          <div class="eyebrow">Направление 02</div>
+          <h2>Ломозаготовка: безопасность лицензии и операционная дисциплина</h2>
+          <p class="module-subtitle searchable">Здесь продает не скорость выплаты, а чувство защищенности клиента перед регулятором.</p>
+          <div class="chip-row"><span class="chip">Лицензия</span><span class="chip">ПСА</span><span class="chip">1С</span><span class="chip">Ролевая модель</span></div>
+        </div>
+        <div class="module-mark">
+          <div class="module-index">02</div>
+          <button class="ghost-btn mark-complete" data-target="metal">Отметить как изученное</button>
+        </div>
+      </div>
+
+      <div class="module-grid">
+        <article class="info-card glass searchable">
+          <h3>Кому продаем</h3>
+          <p>Лицензированные металлисты, работающие под жестким контролем ФНС, лицензирования и фискализации.</p>
+        </article>
+        <article class="info-card glass searchable">
+          <h3>Что продаем</h3>
+          <p>Mozen для лома = легитимность сделки, корректный ПСА, интеграция с 1С, ролевая модель и кастомные платежи.</p>
+        </article>
+      </div>
+
+      <div class="training-grid">
+        <article class="train-card glass searchable">
+          <div class="card-kicker">Быстро перед звонком</div>
+          <h3>Боли клиента</h3>
+          <ul class="bullet-list"><li>Клиент боится не штрафа, а потери лицензии.</li><li>Ошибки в ПСА и фискализации создают прямой регуляторный риск.</li><li>Ручной документооборот тормозит точки и бухгалтерию.</li><li>Нужна ролевая модель, чтобы филиалы и точки не видели лишнего.</li></ul>
+        </article>
+        <article class="train-card glass searchable">
+          <div class="card-kicker">Сильные аргументы</div>
+          <h3>Что говорить</h3>
+          <ul class="bullet-list"><li>Сервис помогает соблюдать легитимность приемки, в том числе через доп. данные по автомобилю.</li><li>ПСА формируется автоматически, с разделением по типам металла и параметрам качества.</li><li>Интеграция с 1С упрощает выплаты и снижает операционные расходы.</li><li>Ролевая модель и кастомные назначения платежей подстраиваются под крупного клиента.</li><li>Менеджер продает глубокое понимание отрасли, а не просто кабинет выплат.</li></ul>
+        </article>
+      </div>
+
+      <div class="training-grid">
+        <article class="train-card glass searchable">
+          <div class="card-kicker">Алгоритм разговора</div>
+          <h3>Как вести диалог</h3>
+          <ol class="ordered-list"><li>Спросить, как сейчас формируются ПСА и разделяются типы металла.</li><li>Выяснить, на чем ведется бухгалтерия: 1С или самописная система.</li><li>Проверить, как организована фискализация на точках.</li><li>Подсветить риск лицензии и показать, что продукт снижает именно этот риск.</li></ol>
+        </article>
+        <article class="train-card glass searchable">
+          <div class="card-kicker">Нужно запомнить</div>
+          <h3>Суть блока</h3>
+          <ul class="bullet-list"><li>Лицензия = жизнь клиента.</li><li>ПСА — священный документ, вокруг него строится аргументация.</li><li>Самозанятые в ломе — красный флаг.</li></ul>
+        </article>
+      </div>
+
+      <article class="transcript glass searchable full-only">
+        <div class="transcript-head">
+          <div>
+            <div class="card-kicker">Полный конспект</div>
+            <h3>Материал из лекции</h3>
+          </div>
+          <button class="ghost-btn section-toggle" data-mode="expand">Раскрыть все</button>
+        </div>
+        <div class="lead-copy"><p class="text searchable">Коллеги, сегодня мы начинаем цикл обучения по работе с узкими сегментами рынка. Первый и самый специфический сегмент — ломозаготовка.</p><p class="text searchable">Для нас этот рынок важен, потому что он огромен (360 млрд рублей в 2025 году) и при этом жестко зарегулирован. Если клиент работает с металлом, он работает под прицелом ФНС и требует максимальной надежности. Наша задача — не просто предложить выплаты, а стать для него инструментом выживания и легальности. Законодательство душит эту отрасль, и наш сервис — это спасательный круг.</p></div>
+        <div class="details-stack">
+    <details class="detail-card"  id="2-портрет-клиента-кто-наш-герой">
+      <summary>2. Портрет клиента: Кто наш герой?</summary>
+      <div class="detail-body"><div class="section-copy"><h4 class="mini-title searchable">Ваш клиент — это лицензированный металлист. Это не «человек с грузовиком». Чтобы работать легально, он уже прошел ад:</h4><ul class="bullet-list"><li class="searchable">Имеет помещение и оборудование (аренда/лизинг).</li><li class="searchable">Держит в штате квалифицированного технолога.</li><li class="searchable">Получил бессрочную лицензию, которую очень легко потерять.</li><li class="searchable">Главный страх клиента: Потеря лицензии из-за нарушений в документах или фискализации. Штраф (500 тыс. — 1 млн руб.) он переживет. Потерю права работать в отрасли — нет.</li></ul></div></div>
+    </details>
+    
+    <details class="detail-card"  id="3-ключевые-точки-боли-и-наши-аргументы">
+      <summary>3. Ключевые «точки боли» и наши аргументы</summary>
+      <div class="detail-body"><div class="section-copy"><p class="text searchable">Чтобы продать интеграцию или подключение, мы должны говорить на языке клиента — языке легитимности и безопасности.</p></div><div class="topic-grid">
+            <article class="topic-card searchable">
+              <h4>3.1. Легитимность металла (“Как сюда приехало 5 тонн?”)</h4>
+              <div class="topic-copy"><p class="text searchable"><span class="label">Законодательная норма:</span> Физически 3 тонны лома нельзя принести в руках. Значит, должен быть автомобиль.
+Что спрашивает контролер: Вбивает госномер машины из акта и проверяет, можно ли на ней перевезти заявленный объем.
+Наш сервис позволяет указать гос-номер автомобиля. Мы автоматически подстраховываем клиента. Если он забьет этот параметр через нас — у него уже есть основание для проверяющих органов. Данные об автомобиле можно и не вносить - на усмотрение клиента.</p></div>
+            </article>
+            
+            <article class="topic-card searchable">
+              <h4>3.2. Паспорт и алименты (Почему нельзя врать)</h4>
+              <div class="topic-copy"><p class="text searchable"><span class="label">Законодательная норма:</span> Металлист не несет ответственность за проверку легитимности документов физлица, но иметь дело с дачей пояснений никто не хочет.
+Скрытый риск: Если сдатчик — алиментщик, 50% его дохода уходят на алименты. Металлист может переводить деньги на чужую карту (жены), чтобы оптимизировать доход сдатчика, но к нему могут возникнуть вопросы к обоснованию, с большей вероятностью от банка или ФНС. Рекомендуем клиентам подписывать со сдатчиком соглашение о выборе счета для выплат.
+Наш аргумент: Мы можем предоставить сервис по проверке паспорта (это платный функционал конкурентов, который рынок почти не юзает), но самое главное мы фиксируем приемо-сдаточный акт (ПСА) на конкретного человека, именно это и есть чистота сделки.</p></div>
+            </article>
+            
+            <article class="topic-card searchable">
+              <h4>3.3. Приемо-сдаточный акт (ПСА) — Святое</h4>
+              <div class="topic-copy"><p class="text searchable"><span class="label">Законодательная норма:</span> </p><p class="text searchable">ГОСТ меняется. Недавно добавили новые поля в ПСА. Клиент должен быть в курсе этих изменений.</p><p class="text searchable">Нельзя смешивать. Запрещено принимать в одном ПСА черный, цветной и драгоценный металлы.
+Наш аргумент: Наш сервис автоматически формирует ПСА. Но главная фишка — деление. Если клиент принял 20 кг меди, 2 кг алюминия и 3 кг золота, система автоматически создаст 3 разных документа под каждый тип металла, с разным весом, влажностью и засоренностью. Клиенту не нужно руками разбираться с бухгалтерией. Мы формируем документ, клиент подписывает его на точке, фоткает и загружает обратно.</p></div>
+            </article>
+            
+            <article class="topic-card searchable">
+              <h4>3.4. Качество металла (Давление производителей)</h4>
+              <div class="topic-copy"><p class="text searchable"><span class="label">Боль клиента:</span> Производители ужесточают требования к засоренности и влажности. У многих мелких игроков устаревшее оборудование. Рынок консолидируется.
+Продающий аргумент: Клиенту нужна экономия на операционке, чтобы компенсировать затраты на сортировку металла. Наш сервис (интеграция с 1С, автоматизация выплат) снижает его операционные расходы и позволяет конкурировать за счет эффективности, а не только цены.</p></div>
+            </article>
+            </div></div>
+    </details>
+    
+    <details class="detail-card"  id="4-экспертиза-в-рынке-на-примере-фискализации-и-кассы-железный-аргумент">
+      <summary>4. Экспертиза в рынке на примере Фискализации и Кассы: Железный аргумент</summary>
+      <div class="detail-body"><div class="section-copy"><p class="text searchable">Это самый опасный участок для клиента.</p><p class="text searchable"><span class="label">По закону:</span> На точке должна стоять оффлайн-касса (печатает чек).</p><p class="text searchable"><span class="label">Реальность:</span> Онлайн-кассы для таких клиентов пока не поддерживаются (проблемы с интеграцией Atol/Эвотор).</p><p class="text searchable"><span class="label">Риск:</span> Отсутствие чека или несоответствие адреса фискализации — это штраф. Второе нарушение грозит внесением в реестр и аннулированием лицензии.</p><p class="text searchable"><span class="label">Наш аргумент:</span> Мы знаем это. Мы погружены в рынок. Мы знаем что нужно клиенту для чувства безопасности.</p><p class="text searchable">Если клиент работает через нашу систему, мы помогаем ему соблюсти регламент фискализации.</p></div></div>
+    </details>
+    
+    <details class="detail-card"  id="5-интеграция-с-1с-самописными-crm-клиента-наше-технологическое-преимущество">
+      <summary>5. Интеграция с 1С / самописными CRM клиента: Наше технологическое преимущество</summary>
+      <div class="detail-body"><div class="section-copy"><p class="text searchable">Средние игроки (а это наш целевой сегмент) сидят в 1С.
+Скрипт отстройки от конкурентов:
+«У нас есть интеграция с основными версиями 1С (Управление торговлей, Управление корпорацией и др.). Это значит, что вашему бухгалтеру не нужен отдельный банк-клиент. Он заходит в свою привычную 1С, нажимает кнопку „Совершить выплату“, и деньги уходят. Все документы подтягиваются автоматически».</p><p class="text searchable">Если у клиента самописная система управления бизнесом - можем предложить внедрение нашего платежного метода в их систему</p></div></div>
+    </details>
+    
+    <details class="detail-card"  id="6-ролевая-модел-и-кастомные-платежи-безопасност-и-гибкост">
+      <summary>6. Ролевая модель и кастомные платежи: Безопасность и Гибкость</summary>
+      <div class="detail-body"><div class="section-copy"><p class="text searchable">Часто сотрудники на точке (приемщик, менеджер, др.)  не должны иметь доступ ко всем данным компании (состояние р/с, реестры выплат, доступ к чужим точкам)</p><h4 class="mini-title searchable">Наш функционал:</h4><ul class="bullet-list"><li class="searchable">Ролевая модель: Исполнитель создает заявку -&gt; Бухгалтер проверяет -&gt; Главный офис подтверждает. Мы настраиваем уровни доступа под любого клиента.</li><li class="searchable">Кастомное назначение платежа: У каждого крупного клиента свои требования к бухгалтерии (что писать в платежке — сначала ИНН, потом сумму или наоборот). У нас есть поле для создания кастомного назначения платежа под конкретного клиента.</li></ul></div></div>
+    </details>
+    
+    <details class="detail-card"  id="7-рекомендуемая-структура-разговора-с-клиентом-алгоритм">
+      <summary>7. Рекомендуемая структура разговора с клиентом (Алгоритм)</summary>
+      <div class="detail-body"><div class="section-copy"><h4 class="mini-title searchable">Когда вы звоните металлисту, вы должны задавать правильные вопросы, чтобы подвести к нашей системе:</h4><ul class="bullet-list"><li class="searchable">Документооборот: «Вы формируете приемо-сдаточные акты (ПСА) вручную или у вас автоматизация? А как решаете вопрос разделения цветных и черных металлов в документах?» (Рассказываем про автоматическое деление ПСА).</li><li class="searchable">Бухгалтерия: «Вы работаете в 1С? Вам было бы удобно проводить выплаты прямо из нее, без открытия стороннего банк-клиента?» (Предлагаем интеграцию).</li><li class="searchable">Кассы: «Как у вас обстоят дела с фискализацией? Вы используете оффлайн-кассы на точках?» (Показываем, экспертизу в рынке и помогаем избежать рисков потери лицензии).</li></ul></div></div>
+    </details>
+    
+    <details class="detail-card"  id="8-резюме-что-запомнит">
+      <summary>8. Резюме: Что запомнить</summary>
+      <div class="detail-body"><div class="section-copy"><p class="text searchable">Лицензия — это жизнь клиента. Мы продаем не просто выплаты, а безопасность этой лицензии.</p><p class="text searchable">ПСА. Основа легальности. Наш сервис помогает закрыть вопрос без головной боли.</p><p class="text searchable">Конкуренты: На рынке есть Алмаз, Мандарин, Jump Finance, Qwell. Наше отличие — глубокая интеграция с 1С и гибкая ролевая модель.</p><p class="text searchable">Самозанятые не работают. Если клиент говорит о работе с самозанятыми в ломе — он нелегален. Мы работаем только с теми, кто ценит лицензию.</p></div></div>
+    </details>
+    </div>
+      </article>
+
+      <article class="quiz-card glass" data-quiz='[{&quot;q&quot;: &quot;Что для металлиста является главным страхом?&quot;, &quot;options&quot;: [&quot;Высокая комиссия банка&quot;, &quot;Потеря лицензии&quot;, &quot;Нехватка рекламы&quot;, &quot;Смена CRM&quot;], &quot;answer&quot;: 1}, {&quot;q&quot;: &quot;Какой документ в лекции назван основой легальности в ломе?&quot;, &quot;options&quot;: [&quot;Счет-фактура&quot;, &quot;ПСА&quot;, &quot;Акт аренды&quot;, &quot;Путевой лист&quot;], &quot;answer&quot;: 1}, {&quot;q&quot;: &quot;В чем одно из ключевых преимуществ Mozen для средних игроков рынка лома?&quot;, &quot;options&quot;: [&quot;Интеграция с маркетплейсами&quot;, &quot;Интеграция с 1С&quot;, &quot;Собственная логистика&quot;, &quot;Бесплатный эквайринг&quot;], &quot;answer&quot;: 1}, {&quot;q&quot;: &quot;Что дает ролевая модель?&quot;, &quot;options&quot;: [&quot;Скрывает все операции от руководства&quot;, &quot;Разграничивает доступы по ролям и этапам согласования&quot;, &quot;Убирает документы&quot;, &quot;Заменяет кассу&quot;], &quot;answer&quot;: 1}, {&quot;q&quot;: &quot;Какой статус исполнителей в ломе в лекции считается нелегальным сигналом?&quot;, &quot;options&quot;: [&quot;ООО&quot;, &quot;ИП&quot;, &quot;Самозанятые&quot;, &quot;Сотрудники по ТК&quot;], &quot;answer&quot;: 2}]'>
+        <div class="quiz-head">
+          <div>
+            <div class="card-kicker">Проверка знаний</div>
+            <h3>Мини-тест по блоку</h3>
+          </div>
+          <button class="ghost-btn run-quiz">Проверить ответы</button>
+        </div>
+        <div class="quiz-questions"></div>
+        <div class="quiz-result"></div>
+      </article>
+    </section>
+    
+    <section class="module" id="auto" data-module="auto">
+      <div class="module-head glass">
+        <div>
+          <div class="eyebrow">Направление 03</div>
+          <h2>Авто: выплаты физикам как инструмент скорости и контроля</h2>
+          <p class="module-subtitle searchable">Автодилеру важны 24/7 сделки, отказ от налички и прозрачность выплат в сети салонов.</p>
+          <div class="chip-row"><span class="chip">24/7 сделки</span><span class="chip">Без налички</span><span class="chip">Лимиты и роли</span><span class="chip">Номинальный счет</span></div>
+        </div>
+        <div class="module-mark">
+          <div class="module-index">03</div>
+          <button class="ghost-btn mark-complete" data-target="auto">Отметить как изученное</button>
+        </div>
+      </div>
+
+      <div class="module-grid">
+        <article class="info-card glass searchable">
+          <h3>Кому продаем</h3>
+          <p>Официальные дилеры, вторичка, параллельный импорт — все, у кого есть выплаты физлицам.</p>
+        </article>
+        <article class="info-card glass searchable">
+          <h3>Что продаем</h3>
+          <p>Mozen Auto = моментальные выплаты физикам, кастомные назначения, ролевая модель и две схемы подключения.</p>
+        </article>
+      </div>
+
+      <div class="training-grid">
+        <article class="train-card glass searchable">
+          <div class="card-kicker">Быстро перед звонком</div>
+          <h3>Боли клиента</h3>
+          <ul class="bullet-list"><li>Наличка дорога, опасна и тормозит сделки.</li><li>Банковские платежки не работают там, где продажи идут вечером и в выходные.</li><li>Сеть салонов сложно контролировать без лимитов и согласований.</li><li>Некорректное назначение платежа создает налоговые риски.</li></ul>
+        </article>
+        <article class="train-card glass searchable">
+          <div class="card-kicker">Сильные аргументы</div>
+          <h3>Что говорить</h3>
+          <ul class="bullet-list"><li>Моментальные выплаты 24/7 позволяют закрывать сделки на месте.</li><li>Отказ от налички экономит на снятии, инкассации, хранении и рисках.</li><li>Ролевая модель дает контроль по лимитам и статусам.</li><li>Можно выбрать схему через расчетный счет или номинальный счет.</li><li>Mozen не вмешивается в право собственности на авто, в отличие от некоторых конкурентов.</li></ul>
+        </article>
+      </div>
+
+      <div class="training-grid">
+        <article class="train-card glass searchable">
+          <div class="card-kicker">Алгоритм разговора</div>
+          <h3>Как вести диалог</h3>
+          <ol class="ordered-list"><li>Понять, с каким типом дилера говорим и какие у него потоки выплат физикам.</li><li>Выяснить, где и как сейчас используется наличка.</li><li>Проверить, срываются ли сделки из-за выходных и вечера.</li><li>Уточнить используемый банк и предложить подходящую схему подключения.</li><li>Посчитать экономику: сколько клиент теряет на наличке и ручном процессе.</li></ol>
+        </article>
+        <article class="train-card glass searchable">
+          <div class="card-kicker">Нужно запомнить</div>
+          <h3>Суть блока</h3>
+          <ul class="bullet-list"><li>Ключевой триггер — 70% сделок происходят в выходные и вечером.</li><li>Номинальный счет нужен там, где клиент не хочет менять основной банк.</li><li>Рынок огромный, а продукт продается через скорость и контроль.</li></ul>
+        </article>
+      </div>
+
+      <article class="transcript glass searchable full-only">
+        <div class="transcript-head">
+          <div>
+            <div class="card-kicker">Полный конспект</div>
+            <h3>Материал из лекции</h3>
+          </div>
+          <button class="ghost-btn section-toggle" data-mode="expand">Раскрыть все</button>
+        </div>
+        <div class="lead-copy"><p class="text searchable">Коллеги, рынок авто — это огромный пирог. Только выплаты физическим лицам в сегменте автомобилей с пробегом составляют более триллиона рублей в год, а общий рынок б/у автомобилей — 8,4 триллиона. При этом у нас пока низкая база: мы только начали активно заходить в этот сегмент в 2024 году. Но потенциал колоссальный.</p><p class="text searchable">Почему автодилеры — наши идеальные клиенты?</p><p class="text searchable">У них постоянно возникают выплаты физикам: за машины по трейд-ину, за разницу в цене, за агентские вознаграждения, за аренду помещений от собственников-физиков, за запчасти, купленные на разборках.</p><p class="text searchable">Они устали от налички — это дорого, небезопасно и неудобно.</p><p class="text searchable">Они устали от банковских платежек, которые не работают в выходные и вечером, когда продается 70% машин.</p><p class="text searchable">Они нуждаются в контроле выплат в больших сетях — без ролевой модели и прозрачности управлять десятками выкупщиков и менеджеров невозможно.</p><p class="text searchable">Наш продукт — не просто «перевести деньги». Это инструмент финансовой безопасности и операционной эффективности для автодилера.</p></div>
+        <div class="details-stack">
+    <details class="detail-card"  id="2-портрет-клиента-кто-наши-клиенты-в-авто">
+      <summary>2. Портрет клиента: Кто наши клиенты в авто?</summary>
+      <div class="detail-body"><div class="section-copy"><p class="text searchable">Автодилеры бывают разными, и почти у каждого есть потребность в выплатах физикам. Мы выделяем три основных типа:</p></div><div class="topic-grid">
+            <article class="topic-card searchable">
+              <h4>2.1. Официальные дилеры</h4>
+              <div class="topic-copy"><p class="text searchable">Имеют договор с производителем (иногда «замороженный» после 2022 года).</p><h4 class="mini-title searchable">Занимаются продажей новых авто, но обязательно имеют:</h4><ul class="bullet-list"><li class="searchable">Трейд-ин — выкуп старых машин у клиентов при покупке новых.</li><li class="searchable">Агентские выплаты — вознаграждения блогерам, партнерам, менеджерам за приведенного клиента.</li><li class="searchable">Аренду — если здание салона принадлежит физическому лицу (собственнику), ему нужно регулярно переводить арендные платежи, часто крупные суммы под конец года.</li><li class="searchable">Запчасти — выкуп бу запчастей у физиков для сервиса.</li><li class="searchable">Продающий аргумент: «Вы говорите, что продаете только новые машины? Отлично. А сколько вы платите за трейд-ин? А сколько уходит на агентские? А собственник помещения — физик? Вот эти потоки мы можем взять на себя».</li></ul></div>
+            </article>
+            
+            <article class="topic-card searchable">
+              <h4>2.2. Параллельный импорт (серый/околоофициальный)</h4>
+              <div class="topic-copy"><p class="text searchable">Ввозят машины из‑за рубежа, часто через физиков-посредников.</p><p class="text searchable">В 2026 году утильсбор ударил по среднему сегменту (машины 2,5–4,5 млн руб.), но премиум (от 10 млн) и бюджет (до 149 л.с.) остались активными.</p><p class="text searchable">Схема: салон находит клиента, заказывает машину, физик-«привозчик» ввозит и оформляет на себя, салон выкупает машину у этого физика либо платит ему агентское вознаграждение.</p><p class="text searchable"><span class="label">Продающий аргумент:</span> «Вы возите машины через физиков? Значит, вы каждый месяц переводите им деньги. С нами вы сможете делать это моментально, в любой день и час, и у вас будет прозрачное назначение платежа для налоговой».</p></div>
+            </article>
+            
+            <article class="topic-card searchable">
+              <h4>2.3. Дилеры, перешедшие на вторичный рынок</h4>
+              <div class="topic-copy"><p class="text searchable">После ухода многих брендов официальные дилеры массово переориентировались на машины с пробегом.</p><p class="text searchable">Их бизнес — выкупать у физиков автомобили по цене ниже рыночной, приводить в порядок и продавать.</p><p class="text searchable">Маржа с одной машины в среднем 200 000 руб. (7–10% от цены). Любое удорожание операционки (например, инкассация, снятие налички) съедает прибыль.</p><p class="text searchable"><span class="label">Продающий аргумент:</span> «Ваша маржа — 200 тысяч с машины. Если вы снимаете наличку в банке, везете ее в салон, храните в сейфе, потом выдаете выкупщикам — вы теряете и время, и деньги, и рискуете. Наш сервис стоит копейки, но убирает эти риски полностью».</p></div>
+            </article>
+            </div></div>
+    </details>
+    
+    <details class="detail-card"  id="3-ключевые-боли-клиента-и-наши-решения">
+      <summary>3. Ключевые боли клиента и наши решения</summary>
+      <div class="detail-body"><div class="topic-grid">
+            <article class="topic-card searchable">
+              <h4>3.1. Боль №1: Наличка — это дорого и опасно</h4>
+              <div class="topic-copy"><p class="text searchable">Что происходит сейчас:
+Дилер снимает деньги с расчетного счета (часто с комиссией ~1–2%), везет их в салон (расходы на инкассацию или сотрудника), хранит в сейфе, потом выдает выкупщикам. Если машину продали вечером или в выходной — наличку не получить до понедельника. Кроме того, наличка в кассе — это риски кражи и претензии налоговой (отсутствие фискализации).</p><h4 class="mini-title searchable">Наше решение:</h4><ul class="bullet-list"><li class="searchable">Безналичные выплаты через наш сервис 24/7.</li><li class="searchable">Деньги списываются с расчетного счета дилера и моментально уходят на карту физику.</li><li class="searchable">Все прозрачно: назначение платежа настраивается под требования клиента (номер договора, ФИО и т.д.).</li><li class="searchable">Продающий аргумент:
+«С наличкой вы платите банку за снятие, тратитесь на инкассацию и сейф, теряете время. С нами вы просто загружаете реестр в личном кабинете — и деньги уходят без задержек. А ваша бухгалтерия получает идеальные выписки».</li></ul></div>
+            </article>
+            
+            <article class="topic-card searchable">
+              <h4>3.2. Боль №2: Банковские платежки не работают в выходные и вечером</h4>
+              <div class="topic-copy"><p class="text searchable">Что происходит сейчас:
+70% сделок в автосалонах происходит в выходные дни и вечером. Банковские платежи (платежные поручения) в это время не проводятся — деньги уходят только в следующий рабочий день. Физик (продавец машины) не хочет ждать, требуя оплату «здесь и сейчас».</p><h4 class="mini-title searchable">Наше решение:</h4><ul class="bullet-list"><li class="searchable">Моментальные выплаты через СБП и карты 24/7, без выходных.</li><li class="searchable">Клиент (дилер) нажимает кнопку в личном кабинете — и деньги уходят сразу.</li><li class="searchable">Продающий аргумент:
+«Ваш клиент приехал продать машину в субботу вечером? С нами вы можете заплатить ему прямо на месте, не откладывая до понедельника. Это повышает лояльность и скорость сделок».</li></ul></div>
+            </article>
+            
+            <article class="topic-card searchable">
+              <h4>3.3. Боль №3: Сложно контролировать выплаты в сети салонов</h4>
+              <div class="topic-copy"><p class="text searchable">Что происходит сейчас:
+В крупной сети работает десяток выкупщиков и менеджеров. Если все имеют доступ к деньгам — возможны ошибки и злоупотребления. Часто бухгалтер уходит в 18:00, и выплаты останавливаются. Нет единого окна для контроля.</p><p class="text searchable"><span class="label">Наше решение:</span> </p><h4 class="mini-title searchable">Ролевая модель. В личном кабинете настраиваются уровни доступа:</h4><ul class="bullet-list"><li class="searchable">Выездной выкупщик создает заявку на выплату.</li><li class="searchable">Руководитель отдела продаж утверждает в пределах своего дневного лимита.</li><li class="searchable">Бухгалтер/финансовый директор видит все операции и может подтверждать крупные суммы.</li><li class="searchable">Генеральный директор получает отчеты.</li><li class="searchable">Все операции прозрачны, статусы видны в реальном времени.</li><li class="searchable">Продающий аргумент:
+«Вы больше не будете зависеть от графика работы бухгалтера. Все выплаты проходят по настроенным лимитам и согласованиям. Никто не сможет перевести лишнего или украсть — доступ строго разграничен».</li></ul></div>
+            </article>
+            
+            <article class="topic-card searchable">
+              <h4>3.4. Боль №4: Нет оснований для налоговой</h4>
+              <div class="topic-copy"><p class="text searchable">Что происходит сейчас:
+При выплате физику нужно указать в назначении платежа корректное основание (номер договора купли-продажи, аренды, агентский договор). Если этого нет — налоговая может переквалифицировать платеж и доначислить налоги.</p><h4 class="mini-title searchable">Наше решение:</h4><ul class="bullet-list"><li class="searchable">Возможность кастомизировать назначение платежа под требования каждого клиента.</li><li class="searchable">Мы можем настроить шаблон: номер договора, ФИО, вид услуги и т.д.</li><li class="searchable">При использовании номинального счета плательщиком выступаем мы, но в назначении платежа все равно отображается нужная информация.</li><li class="searchable">Продающий аргумент:
+«Ваша налоговая база будет чистой: каждое назначение платежа будет соответствовать реальному договору. Никаких вопросов ни от банка, ни от ФНС».</li></ul></div>
+            </article>
+            </div></div>
+    </details>
+    
+    <details class="detail-card"  id="4-две-схемы-работы-расчетный-счет-и-номиналный-счет">
+      <summary>4. Две схемы работы: расчетный счет и номинальный счет</summary>
+      <div class="detail-body"><div class="section-copy"><p class="text searchable">У нас есть два способа подключения клиента. Их нужно знать, чтобы предложить оптимальный вариант.</p></div><div class="topic-grid">
+            <article class="topic-card searchable">
+              <h4>4.1. Схема через расчетный счет клиента</h4>
+              <div class="topic-copy"><h4 class="mini-title searchable">Как работает:</h4><ul class="bullet-list"><li class="searchable">Клиент имеет расчетный счет в банке-партнере (Альфа-Банк или Т-Банк).</li><li class="searchable">Мы интегрируем наш личный кабинет с его счетом через API/терминал.</li><li class="searchable">Клиент заходит в кабинет, создает выплаты, деньги списываются с его счета и уходят физикам.</li><li class="searchable">Плательщиком выступает сам дилер (юридическое лицо).</li></ul><h4 class="mini-title searchable">Когда предлагать:</h4><ul class="bullet-list"><li class="searchable">Клиент уже обслуживается в одном из наших банков-партнеров.</li><li class="searchable">Клиент хочет сохранить полный контроль над исходящими платежами.</li><li class="searchable">Нужна прозрачность для налоговой (плательщик — сам дилер).</li></ul></div>
+            </article>
+            
+            <article class="topic-card searchable">
+              <h4>4.2. Схема через номинальный счет (запускается с апреля 2026)</h4>
+              <div class="topic-copy"><h4 class="mini-title searchable">Как работает:</h4><ul class="bullet-list"><li class="searchable">ООО «Мозен» открывает номинальный счет на себя.</li><li class="searchable">Клиент пополняет этот счет с любого своего расчетного счета (в любом банке).</li><li class="searchable">Деньги лежат на номинальном счете, но принадлежат клиенту (мы не можем их забрать, кроме своей комиссии).</li><li class="searchable">Клиент через личный кабинет отправляет выплаты физикам с этого счета.</li><li class="searchable">Плательщиком в выписке получателя будет Mozen, но в назначении платежа мы прописываем нужные данные (договор, ФИО).</li></ul><h4 class="mini-title searchable">Когда предлагать:</h4><ul class="bullet-list"><li class="searchable">Клиент не хочет переходить в Альфу или Т-Банк.</li><li class="searchable">Клиенту важна простота: пополнил счет, настроил выплаты — и забыл.</li><li class="searchable">Клиент хочет, чтобы его расчетный счет «не светился» в выплатах физикам (особенно актуально для агентских схем).</li></ul><p class="text searchable"><span class="label">Продающий аргумент:</span> «Вы можете работать в любом банке, который вам удобен. Мы откроем номинальный счет, вы переводите туда деньги — и дальше все выплаты идут через нас. Ваш основной счет остается чистым, а все платежи физикам проходят с правильными назначениями».</p></div>
+            </article>
+            </div></div>
+    </details>
+    
+    <details class="detail-card"  id="5-структура-разговора-с-клиентом-алгоритм">
+      <summary>5. Структура разговора с клиентом (алгоритм)</summary>
+      <div class="detail-body"><div class="section-copy"><h4 class="mini-title searchable">Выясните тип дилера и его потоки:</h4><ul class="bullet-list"><li class="searchable">«Вы продаете новые машины, параллельный импорт или вторичку?»</li><li class="searchable">«Как платите за трейд-ин? Наличными или безналом?»</li><li class="searchable">«Есть ли у вас выплаты собственникам-физикам (аренда) или агентские (блогерам, партнерам)?»</li></ul><h4 class="mini-title searchable">Подсветите боль, которую клиент уже чувствует:</h4><ul class="bullet-list"><li class="searchable">«Сколько времени у вас уходит на организацию наличных выплат? А сколько вы теряете на комиссиях за снятие и инкассацию?»</li><li class="searchable">«Бывает, что сделка срывается, потому что вы не можете заплатить продавцу вечером или в выходной?»</li></ul><p class="text searchable">Предложите решение через наш сервис:</p><p class="text searchable">«Мы предлагаем автоматизировать выплаты физикам. Деньги уходят моментально, 24/7, с правильным назначением платежа для налоговой. Вы управляете всем из одного кабинета, настраиваете роли и лимиты».</p><h4 class="mini-title searchable">Уточните, какой банк использует клиент:</h4><ul class="bullet-list"><li class="searchable">Если Альфа или Т-Банк — предлагаем схему через расчетный счет (прямая интеграция).</li><li class="searchable">Если любой другой банк — предлагаем номинальный счет (универсальное решение).</li></ul><p class="text searchable">Покажите экономику:</p><p class="text searchable">«Ваша маржа с машины — 200 тыс. руб. Если вы теряете на наличке даже 1% — это 2 тыс. руб. с машины. При 100 машинах в месяц — это 200 тыс. руб. чистого убытка плюс риски. Наш сервис стоит фиксированный процент, который перекрывается удобством и безопасностью».</p><p class="text searchable">Закройте на контроль и прозрачность:</p><p class="text searchable">«Вы получите полный контроль над выплатами в сети салонов. Каждая операция согласовывается по ролевой модели, вы видите статусы в реальном времени. Никаких “бухгалтер ушла, денег нет”».</p></div></div>
+    </details>
+    
+    <details class="detail-card"  id="6-конкуренты-как-мы-выигрываем">
+      <summary>6. Конкуренты: как мы выигрываем</summary>
+      <div class="detail-body"><div class="topic-grid">
+            <article class="topic-card searchable">
+              <h4>6.1. Jump Finance</h4>
+              <div class="topic-copy"><p class="text searchable"><span class="label">Что делают:</span> похожий сервис выплат, но с дополнительной проверкой авто (отчет по истории) — функция, которая у большинства дилеров уже есть через Дром/Avito.</p><p class="text searchable"><span class="label">Наше преимущество:</span> мы работаем с Альфа-Банком и Т-Банком, можем предложить не только выплаты, но и кредитование, факторинг, индивидуальные лимиты. Альфа — ключевой кредитор автодилеров.</p></div>
+            </article>
+            
+            <article class="topic-card searchable">
+              <h4>6.2. Carcraft (Каркрафт)</h4>
+              <div class="topic-copy"><p class="text searchable"><span class="label">Что делают:</span> краудлендинговая платформа, которая дает дилерам деньги под залог будущих поступлений. Выплаты для них — вторичная функция.</p><p class="text searchable"><span class="label">Наше преимущество:</span> у них ставки существенно выше (фактически микрофинансирование), и они становятся приобретателем машины, что создает дополнительные налоговые риски (НДС 20%). Мы же просто проводим выплаты, не вмешиваясь в право собственности.</p><p class="text searchable">При продаже через сервис, регистрируют а/м на себя - лишний продавец в ПТС.</p></div>
+            </article>
+            
+            <article class="topic-card searchable">
+              <h4>6.3. Qwell</h4>
+              <div class="topic-copy"><p class="text searchable"><span class="label">Что делают:</span> разработчики, которые под индивидуальные задачи делают кастомизированные решения.</p><p class="text searchable"><span class="label">Наше преимущество:</span> мы стремимся к массовому продукту с готовыми интеграциями и ролевыми моделями. У нас уже есть масштабируемое решение, а не разовая доработка.</p></div>
+            </article>
+            
+            <article class="topic-card searchable">
+              <h4>6.4. Яндекс.Авто (Авто.ру) и другие маркетплейсы</h4>
+              <div class="topic-copy"><p class="text searchable"><span class="label">Что делают:</span> свои платежные сервисы, но они завязаны на экосистему.</p><p class="text searchable"><span class="label">Наше преимущество:</span> мы независимы и работаем с любыми каналами привлечения (Avito, Дром, собственный трафик дилера).</p></div>
+            </article>
+            </div></div>
+    </details>
+    
+    <details class="detail-card"  id="7-лимиты-и-комиссия">
+      <summary>7. Лимиты и комиссия</summary>
+      <div class="detail-body"><div class="section-copy"><h4 class="mini-title searchable">Базовые лимиты в Альфа-Банке:</h4><ul class="bullet-list"><li class="searchable">До 40 млн руб. в месяц на все выплаты.</li><li class="searchable">До 10 млн руб. на одну карту в месяц.</li><li class="searchable">Для крупных сетей лимиты могут быть увеличены после согласования.</li><li class="searchable">Комиссия: обсуждается индивидуально, но ориентир — 0,5–1% от суммы выплат в зависимости от объема и схемы (расчетный счет или номинальный).</li><li class="searchable">Важно: при работе через номинальный счет комиссия может быть выше, но клиент получает универсальность (не обязан открывать счет в Альфе/Т-Банке).</li></ul></div></div>
+    </details>
+    
+    <details class="detail-card"  id="8-резюме-что-запомнит">
+      <summary>8. Резюме: что запомнить</summary>
+      <div class="detail-body"><div class="section-copy"><p class="text searchable">Авторынок огромен — только выплаты физикам в сегменте «б/у» превышают триллион рублей в год.</p><p class="text searchable">Наши клиенты — любые автодилеры, у которых есть выплаты физикам: трейд-ин, параллельный импорт, агентские, аренда, запчасти.</p><p class="text searchable"><span class="label">Главные боли:</span> наличка (дорого и небезопасно), неработающие банковские платежи в выходные, отсутствие контроля выплат в сетях, риски налоговых претензий.</p><h4 class="mini-title searchable">Наши решения:</h4><ul class="bullet-list"><li class="searchable">Моментальные выплаты 24/7.</li><li class="searchable">Ролевая модель для контроля.</li><li class="searchable">Кастомизация назначения платежа.</li><li class="searchable">Две схемы подключения: через расчетный счет (для Альфы/Т-Банка) и через номинальный счет (для любых банков).</li><li class="searchable">Конкуренты (Jump, Carcraft, Qwell) либо имеют вторичный функционал, либо работают по более дорогим и рискованным схемам.</li><li class="searchable">Ключевое преимущество Mozen Auto — мы даем не просто выплаты, а безопасность, контроль и круглосуточную доступность, что для автодилера с маржинальностью 200 тыс. руб. с машины становится критически важным.</li></ul></div></div>
+    </details>
+    </div>
+      </article>
+
+      <article class="quiz-card glass" data-quiz='[{&quot;q&quot;: &quot;Какая боль в авто особенно остра из-за вечерних и выходных продаж?&quot;, &quot;options&quot;: [&quot;Нехватка менеджеров&quot;, &quot;Банковские платежки не работают вовремя&quot;, &quot;Нет CRM&quot;, &quot;Нет сайта&quot;], &quot;answer&quot;: 1}, {&quot;q&quot;: &quot;Что позволяет клиенту не зависеть от графика бухгалтера?&quot;, &quot;options&quot;: [&quot;Ролевая модель и согласования по лимитам&quot;, &quot;Реклама на Авито&quot;, &quot;Скидка на ОСАГО&quot;, &quot;Переезд офиса&quot;], &quot;answer&quot;: 0}, {&quot;q&quot;: &quot;Когда уместно предлагать номинальный счет?&quot;, &quot;options&quot;: [&quot;Когда клиент не хочет переходить в банк-партнер&quot;, &quot;Когда нет выплат физикам&quot;, &quot;Только для лома&quot;, &quot;Только для такси&quot;], &quot;answer&quot;: 0}, {&quot;q&quot;: &quot;Что важно в назначении платежа для автодилера?&quot;, &quot;options&quot;: [&quot;Чтобы оно было пустым&quot;, &quot;Чтобы там был только логотип&quot;, &quot;Чтобы оно соответствовало реальному договору и основанию&quot;, &quot;Чтобы его писал водитель&quot;], &quot;answer&quot;: 2}, {&quot;q&quot;: &quot;Как в лекции описывается преимущество Mozen над Carcraft?&quot;, &quot;options&quot;: [&quot;Mozen продает машины дешевле&quot;, &quot;Mozen не создает лишнего продавца и дополнительных налоговых рисков&quot;, &quot;Mozen выдает лицензии&quot;, &quot;Mozen является маркетплейсом&quot;], &quot;answer&quot;: 1}]'>
+        <div class="quiz-head">
+          <div>
+            <div class="card-kicker">Проверка знаний</div>
+            <h3>Мини-тест по блоку</h3>
+          </div>
+          <button class="ghost-btn run-quiz">Проверить ответы</button>
+        </div>
+        <div class="quiz-questions"></div>
+        <div class="quiz-result"></div>
+      </article>
+    </section>
+    
+    <section class="module" id="beauty" data-module="beauty">
+      <div class="module-head glass">
+        <div>
+          <div class="eyebrow">Направление 04</div>
+          <h2>Бьюти: переход от серых схем к модели коворкинга</h2>
+          <p class="module-subtitle searchable">Здесь продукт продается через снижение рисков, сохранение мастеров и управляемую легализацию.</p>
+          <div class="chip-row"><span class="chip">Коворкинг</span><span class="chip">Сплитование</span><span class="chip">Снижение рисков</span><span class="chip">Удержание мастеров</span></div>
+        </div>
+        <div class="module-mark">
+          <div class="module-index">04</div>
+          <button class="ghost-btn mark-complete" data-target="beauty">Отметить как изученное</button>
+        </div>
+      </div>
+
+      <div class="module-grid">
+        <article class="info-card glass searchable">
+          <h3>Кому продаем</h3>
+          <p>Салоны красоты, студии, барбершопы, сети и франшизы, которым нужно перестроить модель работы.</p>
+        </article>
+        <article class="info-card glass searchable">
+          <h3>Что продаем</h3>
+          <p>Mozen Beauty = модель бьюти-коворкинга, сплитование платежей, личные кабинеты, договорная база и путь к фискализации.</p>
+        </article>
+      </div>
+
+      <div class="training-grid">
+        <article class="train-card glass searchable">
+          <div class="card-kicker">Быстро перед звонком</div>
+          <h3>Боли клиента</h3>
+          <ul class="bullet-list"><li>Порог НДС и ужесточение контроля ломают прежнюю экономику салонов.</li><li>Дробление и псевдо-самозанятость больше не выглядят безопасными.</li><li>Серые схемы без касс повышают риск штрафов и доначислений.</li><li>Мастера уходят в домашний формат, если салон режет их доход.</li></ul>
+        </article>
+        <article class="train-card glass searchable">
+          <div class="card-kicker">Сильные аргументы</div>
+          <h3>Что говорить</h3>
+          <ul class="bullet-list"><li>Модель коворкинга переводит отношения в арендную логику вместо трудовой.</li><li>Деньги делятся автоматически между салоном и мастером.</li><li>Мастер видит свою долю сразу и может вывести ее в удобный момент.</li><li>Продукт не обещает волшебного снижения налогов, а обещает снижение рисков.</li><li>Пилот с ФНС и ранние подключения крупных сетей усиливают доверие.</li></ul>
+        </article>
+      </div>
+
+      <div class="training-grid">
+        <article class="train-card glass searchable">
+          <div class="card-kicker">Алгоритм разговора</div>
+          <h3>Как вести диалог</h3>
+          <ol class="ordered-list"><li>Выяснить текущую модель: сотрудники, самозанятые или серая зона.</li><li>Подсветить риски дробления, подмены трудовых отношений и работы без касс.</li><li>Показать модель коворкинга: арендодатель + арендатор, а не работодатель + мастер.</li><li>Объяснить механику сплита и личных кабинетов.</li><li>Закрыть на демо и обсуждение конкретной финансовой модели салона.</li></ol>
+        </article>
+        <article class="train-card glass searchable">
+          <div class="card-kicker">Нужно запомнить</div>
+          <h3>Суть блока</h3>
+          <ul class="bullet-list"><li>Продукт продается через снижение рисков, а не через обещание сделать бизнес дешевле.</li><li>Ключевой актив клиента — мастер, и продукт помогает его удержать.</li><li>Mozen Beauty уже имеет MVP и дорожную карту по фискализации.</li></ul>
+        </article>
+      </div>
+
+      <article class="transcript glass searchable full-only">
+        <div class="transcript-head">
+          <div>
+            <div class="card-kicker">Полный конспект</div>
+            <h3>Материал из лекции</h3>
+          </div>
+          <button class="ghost-btn section-toggle" data-mode="expand">Раскрыть все</button>
+        </div>
+        <div class="lead-copy"><p class="text searchable">Коллеги, у нас появляется новый мощный продукт — Mozen Beauty. Это не просто очередной сервис выплат. Это решение, которое закрывает системный кризис целой отрасли. Рынок бьюти (салоны красоты, барбершопы, ногтевые студии, косметология) находится в шоке: с 2026 года снижен порог освобождения от НДС на УСН до 20 млн руб. в год. Раньше было 60 млн — теперь любой салон с выручкой больше 1,6 млн руб. в месяц попадает под НДС 20% (или 5–7% в зависимости от схемы). Плюс ужесточился контроль за подменой трудовых отношений и дроблением бизнеса.</p><h4 class="mini-title searchable">Ситуация на рынке:</h4><ul class="bullet-list"><li class="searchable">53% работающих компаний и ИП в бьюти не имеют кассовых аппаратов — ушли в полную серую зону.</li><li class="searchable">64% рынка — это мастера, работающие как самозанятые, физики или из дома.</li><li class="searchable">Сети салонов массово дробятся на несколько ИП, рискуя получить доначисления налогов и штрафы.</li></ul><p class="text searchable">Наш продукт — это возможность для салонов легально и безопасно перейти на модель коворкинга, где мастер арендует рабочее место, а салон перестает быть работодателем. Мы помогаем сохранить маржинальность, снизить налоговые риски и удержать мастеров.</p></div>
+        <div class="details-stack">
+    <details class="detail-card"  id="2-портрет-клиента-кто-наш-герой">
+      <summary>2. Портрет клиента: Кто наш герой?</summary>
+      <div class="detail-body"><div class="section-copy"><h4 class="mini-title searchable">Наши клиенты — это владельцы салонов красоты, барбершопов, студий ногтевого сервиса, косметологических кабинетов. Они могут быть:</h4><ul class="bullet-list"><li class="searchable">Сетевые игроки (от 5 до 700 салонов) — им жизненно необходимо перестроить модель работы, чтобы не разориться на налогах.</li><li class="searchable">Средние и малые салоны (1–3 точки) — они либо уже в серой зоне, либо пытаются «дробиться» через ИП родственников, что крайне рискованно.</li><li class="searchable">Франшизы — им важно сохранить единые стандарты и защитить партнеров от налоговых претензий.</li></ul><h4 class="mini-title searchable">Главные боли:</h4><ul class="bullet-list"><li class="searchable">НДС убивает рентабельность. Если салон официально показывает выручку выше 20 млн руб. в год, налоговая нагрузка резко растет.</li><li class="searchable">Дробление бизнеса больше не спасает. Налоговая легко доказывает аффилированность нескольких ИП и доначисляет налоги за весь период.</li><li class="searchable">Подмена трудовых отношений. Схема «мастер-самозанятый» была популярна, но ФНС признает ее фиктивной, если мастер работает только в одном салоне, использует его материалы и клиентопоток.</li><li class="searchable">Наличка и кассы. 53% салонов работают без касс — это прямой путь к штрафам и уголовной ответственности.</li><li class="searchable">Мастера уходят в «домашки». Когда салон вынужден резать зарплату, мастер уходит работать на себя, и бизнес теряет ключевой актив.</li></ul></div></div>
+    </details>
+    
+    <details class="detail-card"  id="3-наше-решение-как-работает-mozen-beauty">
+      <summary>3. Наше решение: Как работает Mozen Beauty</summary>
+      <div class="detail-body"><div class="section-copy"><h4 class="mini-title searchable">Мы предлагаем салону перейти на модель бьюти-коворкинга:</h4><ul class="bullet-list"><li class="searchable">Салон перестает быть работодателем, он становится арендодателем рабочего места.</li><li class="searchable">Мастер становится арендатором (физик, самозанятый или ИП) и самостоятельно оказывает услуги клиентам.</li><li class="searchable">Деньги от клиента проходят через наш номинальный счет и автоматически делятся между мастером и салоном в соответствии с их договоренностью (например, 50/50).</li><li class="searchable">Мы выступаем агрегатором платежей — платеж поступает на наш номинальный счет, мы показываем остатки в личных кабинетах салона и мастера, а затем выводим средства на их расчетные счета/карты.</li></ul><p class="text searchable"><span class="label">Ключевые элементы продукта:</span> </p><div class="table-wrap"><table class="academy-table searchable"><thead><tr><th>Элемент</th><th>Как работает</th></tr></thead><tbody><tr><td>Договорная база</td><td>Салон и мастер подписывают договор аренды рабочего места (включая инструменты, свет, воду). Этот договор — основание для того, что салон не является работодателем.</td></tr><tr><td>Разделение д/с (салон/мастер)</td><td>Клиент оплачивает услугу через QR-код или ссылку СБП. Деньги попадают на номинальный счет Mozen, система автоматически делит сумму по заданному проценту (например, салону 50%, мастеру 50%).</td></tr><tr><td>Личные кабинеты</td><td>У салона и мастера есть кабинеты, где они видят свои остатки в реальном времени. Мастер может вывести деньги на свою карту/счет в любой момент. Клиент (салон), устанавливает лимиты по срокам и объемам выводимых средств.</td></tr><tr><td>Фискализация</td><td>В ближайшее время (2–3 квартал 2026) мы станем полноценным мерчантом и будем самостоятельно фискализировать операции (выдавать чеки через онлайн-кассу). Сейчас работаем через интеграцию с YClients или без фискализации (в зависимости от статуса мастера).Исполнители в статусе ИП должны будут подключать обязательно!</td></tr><tr><td>Интеграция с YClients</td><td>Если салон использует эту CRM, мы работаем через нее: запись клиента подтягивается, мастер нажимает «оплатить» в YClients, и платеж идет через нас.</td></tr></tbody></table></div><p class="text searchable"><span class="label">Важно:</span> Наш продукт не делает бизнес дешевле, он делает его менее рискованным. Мы не снижаем налоговую нагрузку, но помогаем перераспределить ее так, чтобы салон не разорился на штрафах.</p></div></div>
+    </details>
+    
+    <details class="detail-card"  id="4-почему-клиенту-выгодно-подключится">
+      <summary>4. Почему клиенту выгодно подключиться</summary>
+      <div class="detail-body"><div class="topic-grid">
+            <article class="topic-card searchable">
+              <h4>4.1. Снижение рисков, а не налогов</h4>
+              <div class="topic-copy"><p class="text searchable">Вместо дробления на 4–5 ИП (что теперь легко доказывается) — единая прозрачная структура с договорами аренды.</p><p class="text searchable">Вместо схем с самозанятыми, которые признаются трудовыми отношениями — четкая арендная модель.</p><p class="text searchable">Вместо работы без касс — прозрачные платежи через номинальный счет с возможностью фискализации.</p></div>
+            </article>
+            
+            <article class="topic-card searchable">
+              <h4>4.2. Сохранение мастеров</h4>
+              <div class="topic-copy"><p class="text searchable">Мастер видит свои деньги сразу после услуги, может вывести в любой момент — это повышает лояльность.</p><p class="text searchable">Салон не урезает процент мастеру (мы сохраняем стандартные 50/50), поэтому мастеру нет смысла уходить в «домашку».</p></div>
+            </article>
+            
+            <article class="topic-card searchable">
+              <h4>4.3. Конкурентное преимущество перед «чернушниками»</h4>
+              <div class="topic-copy"><p class="text searchable">Серые салоны рано или поздно будут закрыты или оштрафованы.</p><p class="text searchable">Белые салоны с нашей моделью могут смело заявлять клиентам: «Мы работаем прозрачно, у нас есть договоры, чеки, вы можете платить картой и получать официальную услугу».</p></div>
+            </article>
+            
+            <article class="topic-card searchable">
+              <h4>4.4. Поддержка государства</h4>
+              <div class="topic-copy"><p class="text searchable">У нас есть пилотный проект с налоговой службой Рязанской области. ФНС подтвердила, что модель коворкинга с нашим сервисом приемлема как переходный этап к полному обелению отрасли.</p><p class="text searchable">Это значит, что риск проверки и доначислений для подключенных салонов значительно ниже, чем для тех, кто продолжает работать по старым схемам.</p></div>
+            </article>
+            </div></div>
+    </details>
+    
+    <details class="detail-card"  id="5-техническая-механика-и-текущий-статус">
+      <summary>5. Техническая механика и текущий статус</summary>
+      <div class="detail-body"><div class="topic-grid">
+            <article class="topic-card searchable">
+              <h4>Что уже работает</h4>
+              <div class="topic-copy"><p class="text searchable">Личные кабинеты салона и мастера — есть.</p><p class="text searchable">Договоры аренды — подписываются электронно.</p><p class="text searchable">Прием платежей через СБП/ссылку — через интеграцию с YClients (охватывает ~36% рынка) или через наш собственный функционал.</p><p class="text searchable">Сплитование средств — работает.</p><p class="text searchable">Вывод денег — мастер может вывести в любой момент на карту/счет.</p></div>
+            </article>
+            
+            <article class="topic-card searchable">
+              <h4>Что в разработке (ближайшие 1–3 квартала 2026)</h4>
+              <div class="topic-copy"><p class="text searchable">Становление мерчантом — мы получим собственную онлайн-кассу и начнем фискализировать все операции самостоятельно. Это снимет ограничения по работе с любыми салонами (не только с YClients).</p><p class="text searchable">Интеграция с Тинькофф и Альфа-Банком — снижение комиссии и расширение каналов приема платежей.</p><p class="text searchable">Кнопка оплаты налога для самозанятых — прямо в личном кабинете мастер сможет уплатить налог, не заходя в «Мой налог».</p></div>
+            </article>
+            
+            <article class="topic-card searchable">
+              <h4>Комиссия — 5% с оборота</h4>
+              <div class="topic-copy"><p class="text searchable">5% — рыночная ставка, которую салоны готовы платить за безопасность и автоматизацию.</p><p class="text searchable">В перспективе комиссия может быть дифференцирована, но пока все подключаются на 5%.</p><p class="text searchable">Из этих 5% примерно 2.8% уходит на эквайринг и банковские комиссии, остальное — наша маржа.</p></div>
+            </article>
+            </div></div>
+    </details>
+    
+    <details class="detail-card"  id="6-конкурентная-среда">
+      <summary>6. Конкурентная среда</summary>
+      <div class="detail-body"><div class="section-copy"><h4 class="mini-title searchable">Ключевые конкуренты, которые могут появиться:</h4><ul class="bullet-list"><li class="searchable">Тинькофф Банк — они видят наши обороты и могут запустить аналогичный продукт.</li><li class="searchable">Яндекс.Дикий бизнес — Яндекс купил этот сервис, но он не является монополистом на рынке записи (есть YClients, Avito, другие CRM).</li><li class="searchable">YClients — они могут развить платежное направление, но пока не предлагают сплитования и арендной модели.</li></ul><h4 class="mini-title searchable">Наше преимущество:</h4><ul class="bullet-list"><li class="searchable">Мы первые и уже имеем работающий MVP.</li><li class="searchable">У нас есть договоренности с крупными сетями (Blackstar, TopGun, Чио-Чио, FoxHens, «Кисточки» и др.) и реальные подключения.</li><li class="searchable">Мы единственные, кто предлагает юридически выверенную модель коворкинга с договорами аренды и номинальным счетом.</li><li class="searchable">У нас есть поддержка ФНС (пилотный проект) — это мощный аргумент для клиента.</li></ul></div></div>
+    </details>
+    
+    <details class="detail-card"  id="7-структура-разговора-с-клиентом-алгоритм">
+      <summary>7. Структура разговора с клиентом (алгоритм)</summary>
+      <div class="detail-body"><div class="section-copy"><h4 class="mini-title searchable">Выявите текущую модель работы:</h4><ul class="bullet-list"><li class="searchable">«У вас мастера оформлены как сотрудники, самозанятые или вообще никак?»</li><li class="searchable">«Как вы справляетесь с новым порогом НДС? Дробитесь на несколько ИП?»</li></ul><h4 class="mini-title searchable">Подсветите риски:</h4><ul class="bullet-list"><li class="searchable">«Дробление сейчас легко доказывается через аффилированность. Доначисление налогов может убить бизнес».</li><li class="searchable">«Схема с самозанятыми — это фактически подмена трудовых отношений. Налоговая уже приходит с проверками и требует переквалификации».</li><li class="searchable">«Если вы работаете без кассы, вы в 53% «серого» рынка. Проверка — это не вопрос «если», а вопрос «когда»».</li></ul><h4 class="mini-title searchable">Предложите решение — модель коворкинга:</h4><ul class="bullet-list"><li class="searchable">«Мы предлагаем перевести вашу точку в формат коворкинга: мастера арендуют рабочие места, а вы получаете арендную плату. Деньги от клиента проходят через наш номинальный счет и автоматически делятся между вами и мастером».</li><li class="searchable">«Это не снижает вашу выручку, но убирает признаки трудовых отношений. Все прозрачно, есть договоры, чеки (скоро), и главное — вы работаете в рамках рекомендаций ФНС».</li></ul><p class="text searchable">Покажите экономику:</p><p class="text searchable">«Сейчас вы платите налоги с полной выручки салона. По нашей модели вы платите налог только с арендной платы (вашей доли). Мастер платит налог со своей части (как самозанятый или ИП). Общая налоговая нагрузка может быть даже выше, но вы исключаете риск доначислений за прошлые периоды и сохраняете бизнес».</p><h4 class="mini-title searchable">Закройте на конкретику:</h4><ul class="bullet-list"><li class="searchable">«У нас уже подключены крупные сети, например, Чи-Чил, Blackstar, FoxHens. Они прошли тестовые пилоты и готовы масштабировать. Если вы хотите сохранить мастеров и не уйти в серую зону — это единственное легальное решение на рынке».</li><li class="searchable">«Мы готовы провести вам демо, показать личные кабинеты, договоры и расчеты. Встречу провожу лично я (или руководитель направления) — отвечу на все сложные вопросы».</li></ul></div></div>
+    </details>
+    
+    <details class="detail-card"  id="8-резюме-что-запомнит">
+      <summary>8. Резюме: Что запомнить</summary>
+      <div class="detail-body"><div class="section-copy"><p class="text searchable">Рынок бьюти в кризисе: снижение порога НДС, ужесточение контроля за дроблением и самозанятыми, массовый уход в серую зону.</p><p class="text searchable">Наше решение — модель коворкинга: салон становится арендодателем, мастер — арендатором. Мы сплитуем платежи через номинальный счет.</p><p class="text searchable">Главная ценность — снижение рисков: мы не делаем бизнес дешевле, но делаем его безопасным. Риск доначислений и потери лицензии снижается кардинально.</p><p class="text searchable">Клиент сохраняет мастеров: мастер видит деньги сразу, получает свою долю прозрачно, у него нет стимула уходить в «домашку».</p><p class="text searchable">Продукт уже работает: есть личные кабинеты, сплитование, интеграция с YClients, подключены крупные сети.</p><p class="text searchable">В ближайших планах: полноценный мерчант, собственная фискализация, работа с любыми салонами, снижение комиссии через прямые интеграции с банками.</p><p class="text searchable">Конкуренция появится, но мы первые и с поддержкой ФНС. Это наш ключевой козырь.</p></div></div>
+    </details>
+    </div>
+      </article>
+
+      <article class="quiz-card glass" data-quiz='[{&quot;q&quot;: &quot;Через какую основную модель предлагается переводить салон в лекции?&quot;, &quot;options&quot;: [&quot;Франчайзинг&quot;, &quot;Коворкинг с арендой рабочего места&quot;, &quot;Трудовой договор со всеми мастерами&quot;, &quot;Агентская схема с блогерами&quot;], &quot;answer&quot;: 1}, {&quot;q&quot;: &quot;Что является главной ценностью Mozen Beauty?&quot;, &quot;options&quot;: [&quot;Максимальное снижение налогов любой ценой&quot;, &quot;Снижение рисков и легализация модели&quot;, &quot;Бесплатный эквайринг&quot;, &quot;Реклама салона&quot;], &quot;answer&quot;: 1}, {&quot;q&quot;: &quot;Как продукт помогает удерживать мастеров?&quot;, &quot;options&quot;: [&quot;Запрещает им увольняться&quot;, &quot;Сразу показывает и дает выводить их долю денег&quot;, &quot;Полностью отменяет налоги&quot;, &quot;Выдает им кредиты&quot;], &quot;answer&quot;: 1}, {&quot;q&quot;: &quot;Какой аргумент усиливает доверие к продукту со стороны клиента?&quot;, &quot;options&quot;: [&quot;Поддержка пилотного проекта с ФНС&quot;, &quot;Собственная сеть салонов&quot;, &quot;Нулевая комиссия&quot;, &quot;Монополия на рынке&quot;], &quot;answer&quot;: 0}, {&quot;q&quot;: &quot;Что должно происходить с деньгами клиента по модели Mozen Beauty?&quot;, &quot;options&quot;: [&quot;Они идут только салону&quot;, &quot;Они делятся между салоном и мастером через номинальный счет&quot;, &quot;Они хранятся наличными&quot;, &quot;Они переводятся только раз в месяц&quot;], &quot;answer&quot;: 1}]'>
+        <div class="quiz-head">
+          <div>
+            <div class="card-kicker">Проверка знаний</div>
+            <h3>Мини-тест по блоку</h3>
+          </div>
+          <button class="ghost-btn run-quiz">Проверить ответы</button>
+        </div>
+        <div class="quiz-questions"></div>
+        <div class="quiz-result"></div>
+      </article>
+    </section>
+    
+    <section class="module" id="registry" data-module="registry">
+      <div class="module-head glass">
+        <div>
+          <div class="eyebrow">Направление 05</div>
+          <h2>Универсальный кабинет: реестровые выплаты, вторсырье и дикоросы</h2>
+          <p class="module-subtitle searchable">Стартовая точка для клиентов без тяжелой интеграции и для сезонных, неклассифицированных отраслей.</p>
+          <div class="chip-row"><span class="chip">Lite кабинет</span><span class="chip">Без API</span><span class="chip">Сезонные выплаты</span><span class="chip">Документы по шаблону</span></div>
+        </div>
+        <div class="module-mark">
+          <div class="module-index">05</div>
+          <button class="ghost-btn mark-complete" data-target="registry">Отметить как изученное</button>
+        </div>
+      </div>
+
+      <div class="module-grid">
+        <article class="info-card glass searchable">
+          <h3>Кому продаем</h3>
+          <p>Малый бизнес, сезонные закупщики, вторсырье, дикоросы и клиенты с небольшим числом исполнителей.</p>
+        </article>
+        <article class="info-card glass searchable">
+          <h3>Что продаем</h3>
+          <p>Mozen Lite / универсальный кабинет = простая загрузка реестра, быстрые выплаты, гибкие документы и легкий вход в экосистему.</p>
+        </article>
+      </div>
+
+      <div class="training-grid">
+        <article class="train-card glass searchable">
+          <div class="card-kicker">Быстро перед звонком</div>
+          <h3>Боли клиента</h3>
+          <ul class="bullet-list"><li>Клиенту нужны выплаты физлицам, но у него нет отраслевой ERP или API.</li><li>Бухгалтерия устает от ручных переводов и рутинных операций.</li><li>В сезон важно быстро масштабировать выплаты без налички.</li><li>Документы нужны не всем, но многим нужны кастомные закупочные акты.</li></ul>
+        </article>
+        <article class="train-card glass searchable">
+          <div class="card-kicker">Сильные аргументы</div>
+          <h3>Что говорить</h3>
+          <ul class="bullet-list"><li>Можно стартовать без сложной интеграции и без абонентской платы.</li><li>Универсальный кабинет подходит как тестовый вход в продукт.</li><li>Для вторсырья можно настроить закупочные акты и чистый учет.</li><li>Для дикоросов удобно убирать наличку у выездных закупщиков.</li><li>Клиент может вырасти из Lite в более сложные отраслевые решения.</li></ul>
+        </article>
+      </div>
+
+      <div class="training-grid">
+        <article class="train-card glass searchable">
+          <div class="card-kicker">Алгоритм разговора</div>
+          <h3>Как вести диалог</h3>
+          <ol class="ordered-list"><li>Определить сегмент: выплаты исполнителям, вторсырье, дикоросы или что-то смежное.</li><li>Понять, как клиент платит сейчас и где теряет время.</li><li>Уточнить, нужны ли закрывающие документы и в каком виде.</li><li>Предложить тест-драйв кабинета на ограниченном объеме.</li><li>Для дикоросов продавать до сезона, а не в разгар.</li></ol>
+        </article>
+        <article class="train-card glass searchable">
+          <div class="card-kicker">Нужно запомнить</div>
+          <h3>Суть блока</h3>
+          <ul class="bullet-list"><li>Универсальный кабинет — это вход, а не упрощенный тупик.</li><li>Вторсырье и лом — не одно и то же по кассам и налоговой логике.</li><li>Дикоросы — сезонный рынок, поэтому тайминг продажи критичен.</li></ul>
+        </article>
+      </div>
+
+      <article class="transcript glass searchable full-only">
+        <div class="transcript-head">
+          <div>
+            <div class="card-kicker">Полный конспект</div>
+            <h3>Материал из лекции</h3>
+          </div>
+          <button class="ghost-btn section-toggle" data-mode="expand">Раскрыть все</button>
+        </div>
+        <div class="lead-copy"><h4 class="mini-title searchable">Коллеги, у нас есть продукты, которые мы привыкли продавать в «классических» отраслях: такси (с API, агентскими договорами, фискализацией), лом (с приемо-сдаточными актами, офлайн-кассами, лицензиями). Но есть огромный пласт клиентов, которые не попадают ни в одну из этих категорий. Это могут быть:</h4><ul class="bullet-list"><li class="searchable">компании с небольшим количеством исполнителей (20–50 человек);</li><li class="searchable">бизнесы, работающие по агентским схемам без глубокой автоматизации;</li><li class="searchable">сезонные закупщики вторсырья или дикоросов;</li><li class="searchable">любые организации, которым нужно просто переводить деньги физлицам, без навороченной документации.</li></ul><p class="text searchable">Исторически наш продукт для таких клиентов появился раньше, чем специализированные решения для такси и лома. Он прошел путь от простой возможности выплат по реквизитам до современного универсального кабинета, который может стать стартовой площадкой для работы с нами.</p></div>
+        <div class="details-stack">
+    <details class="detail-card"  id="2-портрет-клиента-кому-нужен-универсалный-кабинет">
+      <summary>2. Портрет клиента: Кому нужен универсальный кабинет?</summary>
+      <div class="detail-body"><div class="section-copy"><h4 class="mini-title searchable">Мы выделяем три категории клиентов, для которых реестровые выплаты (универсальный кабинет) — идеальное решение:</h4><ul class="bullet-list"><li class="searchable">«Старая гвардия» — клиенты, которые были переведены с ранних версий (BroPays, Bropays 2.0). У них уже настроена своя юридическая и бухгалтерская обвязка. Им нужно только одно — техническая возможность отправлять деньги физлицам.</li><li class="searchable">Новые клиенты из неклассифицированных отраслей — грузоперевозки без API, компании, привлекающие самозанятых для разовых работ (замена батарей, выездные услуги), реферальные программы, выплаты докторам за направления и т.д.</li><li class="searchable">Малый бизнес — компании с числом исполнителей до 50 человек, где бухгалтер или руководитель тратит время на ручные переводы. Им нужен простой инструмент, который ускорит процесс без головной боли с настройкой.</li><li class="searchable">Главная боль:
+Нет отраслевого решения, но есть потребность в быстрых и понятных выплатах. Клиент не хочет разбираться в тонкостях 115‑ФЗ, но хочет экономить время и не терять деньги на комиссиях.</li><li class="searchable">Наш ответ:
+Универсальный кабинет — это минималистичный инструмент с тремя кнопками, который можно предложить в качестве теста, а потом доращивать до полноценной экосистемы.</li></ul></div></div>
+    </details>
+    
+    <details class="detail-card"  id="3-реестровые-выплаты-эволюция-и-возможности">
+      <summary>3. Реестровые выплаты: Эволюция и возможности</summary>
+      <div class="detail-body"><div class="section-copy"><p class="text searchable"><span class="label">Определение:</span> Реестровые выплаты — это механизм перевода денег исполнителям на основании загруженного реестра (списка получателей) с возможностью как простых выплат, так и подключения дополнительных сервисов (договоры, фискализация) по желанию клиента.</p><p class="text searchable">Историческая справка (из лекции):</p><p class="text searchable">«В начале в компании появилась связка ERP  такси и EDGVR, которая позволяла осуществлять выплаты по реквизитам. Позже появился BroPays 1.0 — продукт, который никто не поддерживал, но он дал основу. Со временем мы отсекли все лишнее (фотографирование лома, чеки) и оставили просто функционал выплат — то, что сегодня называется Lite кабинетом».</p><h4 class="mini-title searchable">Как это выглядит сейчас:</h4><ul class="bullet-list"><li class="searchable">Клиент заходит в личный кабинет Lite (или универсальный).</li><li class="searchable">Загружает реестр с ФИО, телефоном, суммой, реквизитами (карта/СБП).</li><li class="searchable">Нажимает «Отправить».</li><li class="searchable">Деньги уходят с расчетного счета юрлица на карты физиков.</li></ul><p class="text searchable"><span class="label">Продающий аргумент:</span> </p><p class="text searchable">«У вас всего 20 водителей, курьеров или сборщиков? Не хотите подключать сложную ERP? Вот простой кабинет. Вы платите только комиссию банку, никакой абонентской платы. Это бесплатная автоматизация для малого бизнеса».</p></div></div>
+    </details>
+    
+    <details class="detail-card"  id="4-вторсыре-отличие-от-лома">
+      <summary>4. Вторсырье: Отличие от лома</summary>
+      <div class="detail-body"><div class="section-copy"><p class="text searchable">Что это:
+Вторсырье — любые материалы, которые можно переработать и использовать повторно. Основные сегменты в нашей практике: палеты, картон, резина, пластик, стекло.</p><p class="text searchable">Ключевые особенности:</p><div class="table-wrap"><table class="academy-table searchable"><thead><tr><th>Сегмент</th><th>Как работают наши клиенты</th><th>Налоговый нюанс</th></tr></thead><tbody><tr><td>Палеты</td><td>Скупают б/у поддоны, ремонтируют, обрабатывают, перепродают. Палеты ценятся из-за сложности получения новой древесины (разрешения на вырубку).</td><td>Часто сами являются производителями полного цикла (ремонт, обработка). Могут закладывать НДС и получать возмещение.</td></tr><tr><td>Картон</td><td>Собирают, прессуют в блоки, везут на целлюлозно-бумажные комбинаты.</td><td>Обычно работают как «скупи-продай», без переработки. НДС — только на комиссию.</td></tr><tr><td>Резина</td><td>Сортируют, дробят в крошку, используют как покрытие для стадионов, дорожек.</td><td>Могут быть как переработчиками (тогда полный цикл с возмещением НДС), так и просто сборщиками.</td></tr><tr><td>Пластик / стекло</td><td>В основном сбор и прессование. Сами не перерабатывают.</td><td>Чистое «скупи-продай», работают с закупочными актами.</td></tr></tbody></table></div><h4 class="mini-title searchable">Главное отличие от лома:</h4><ul class="bullet-list"><li class="searchable">У ломовиков обязательна офлайн-касса на точке (бумажный чек). Во вторсырье достаточно онлайн-кассы, а в дикоросах касса вообще не требуется по закону (но можно подключить виртуальную кассу Atoll).</li><li class="searchable">Ломовики почти никогда не занимаются переработкой, а во вторсырье много клиентов, которые сами доводят продукт до товарного вида (например, дробят резину или ремонтируют палеты).</li></ul><p class="text searchable"><span class="label">Продающий аргумент:</span> </p><p class="text searchable">«Если ваш клиент — переработчик вторсырья, ему важно закрывать НДС. Наш сервис интегрируется с онлайн-кассами, формирует закупочные акты (не путать с ПСА) и позволяет разделять потоки: что он купил у физиков, что сам произвел. Это чистый учет для налоговой».</p></div></div>
+    </details>
+    
+    <details class="detail-card"  id="5-дикоросы-сезонный-но-маржиналный-рынок">
+      <summary>5. Дикоросы: Сезонный, но маржинальный рынок</summary>
+      <div class="detail-body"><div class="section-copy"><p class="text searchable"><span class="label">Определение:</span> Дикоросы — это собранные в природных условиях продукты: ягоды, грибы, водоросли, дичь, молоко от личных хозяйств, мясо и даже рога. Все, что физики сдают заготовителям.</p><p class="text searchable">Объем рынка:
+Около 100 млрд рублей в год (примерно в 3 раза меньше рынка лома). Сезон: с февраля по сентябрь, пик — лето.</p><h4 class="mini-title searchable">Специфика клиентов:</h4><ul class="bullet-list"><li class="searchable">В каждом регионе 2–3 крупных закупщика, которые диктуют правила (например, Freshberry в Карелии). Сарафанное радио работает мгновенно: если «облажаться» с одним — узнают все.</li><li class="searchable">Физики часто получают наличные, и это пока не запрещено. Переход на безнал — это «продажа сервиса» через удобство, а не через принуждение.</li><li class="searchable">Сдатчиками могут быть даже несовершеннолетние, суммы мелкие (по 500–2000 руб.), бизнес держится на количестве транзакций.</li></ul><p class="text searchable">Налоговые льготы:</p><p class="text searchable">«Если доход физика от сдачи дикоросов за год не превышает 250 тысяч рублей, НДФЛ не удерживается». Этим часто пользуются сборщики.</p><h4 class="mini-title searchable">Как мы продаем дикоросам:</h4><ul class="bullet-list"><li class="searchable">Универсальный кабинет идеально подходит: выездной закупщик может прямо в поле через интернет перевести деньги бабушке на карту, а не возить с собой наличку.</li><li class="searchable">Для крупных скупщиков — формирование закупочных актов (аналог ПСА) по шаблону клиента.</li><li class="searchable">Возможна работа с самозанятыми: договор на сбор ягод/грибов как на оказание услуги.</li></ul><p class="text searchable"><span class="label">Продающий аргумент:</span> </p><p class="text searchable">«Дикоросы — сезонная история, но она может резко поднять ваши продажи летом. Крупные скупщики готовы платить комиссию 0,8–1% за возможность не возить с собой наличку, не бояться инкассации и иметь прозрачные закупочные акты. Приходите к ним в апреле, пока сезон не стартовал».</p></div></div>
+    </details>
+    
+    <details class="detail-card"  id="6-универсалный-кабинет-как-стартовая-площадка">
+      <summary>6. Универсальный кабинет как стартовая площадка</summary>
+      <div class="detail-body"><div class="section-copy"><h4 class="mini-title searchable">Мы часто рассматриваем реестровые выплаты как «лайт-версию» нашего сервиса. Это точка входа для клиентов, которые:</h4><ul class="bullet-list"><li class="searchable">сомневаются в необходимости сложной интеграции;</li><li class="searchable">работают с наличкой и хотят попробовать безнал;</li><li class="searchable">имеют одновременно несколько направлений (например, таксопарк с «внеагрегатными» остатками).</li></ul><p class="text searchable"><span class="label">Реальный кейс из лекции:</span> </p><p class="text searchable">«У клиента есть ERP для такси (выплаты с таксометра через API). Но есть часть вознаграждений, которые не начисляются на таксометр (бонусы, компенсации). Для таких выплат он параллельно использует универсальный кабинет — и это нормально. Мы не запрещаем, а наоборот, помогаем закрыть все потребности».</p><h4 class="mini-title searchable">Почему это удобно для менеджера:</h4><ul class="bullet-list"><li class="searchable">Не нужно разбираться в тонкостях ПСА, лицензий, офлайн-касс.</li><li class="searchable">Комиссия банка определяется индивидуально под кейс (0,6–0,8% для вторсырья, выше для экзотики).</li><li class="searchable">Можно предложить клиенту «попробовать» с минимальными рисками, а потом дообучить до более сложных продуктов (лом, такси).</li></ul></div></div>
+    </details>
+    
+    <details class="detail-card"  id="7-структура-разговора-с-клиентом-алгоритм">
+      <summary>7. Структура разговора с клиентом (алгоритм)</summary>
+      <div class="detail-body"><div class="section-copy"><h4 class="mini-title searchable">Выясните, к какому сегменту относится клиент:</h4><ul class="bullet-list"><li class="searchable">«Вы принимаете лом, вторсырье, дикоросы или просто платите исполнителям?»</li><li class="searchable">Если не попадает ни в один из наших «тяжелых» сегментов — сразу переходите к универсальному кабинету.</li></ul><h4 class="mini-title searchable">Уточните текущий процесс выплат:</h4><ul class="bullet-list"><li class="searchable">«Как сейчас платите? Наличными? Переводами из банк-клиента по 20 раз в день?»</li><li class="searchable">Если клиент жалуется на рутину — показываете простоту кабинета.</li></ul><h4 class="mini-title searchable">Спросите про документы:</h4><ul class="bullet-list"><li class="searchable">«Вам нужны закрывающие документы для налоговой? Нужны закупочные акты?»</li><li class="searchable">Если да — рассказываете, что мы можем формировать акты по шаблону клиента.</li><li class="searchable">Если нет — акцентируете, что в универсальном кабинете можно работать без документов (но предупреждаете о рисках).</li></ul><p class="text searchable">Предложите «тест-драйв»:</p><p class="text searchable">«У нас есть кабинет с тремя кнопками. Загружаете реестр, деньги уходят моментально. Никакой абонентской платы. Попробуйте на своих 20–30 исполнителях — и увидите, как сократится время бухгалтера».</p><p class="text searchable">Закройте на сезонности (для дикоросов):</p><p class="text searchable">«Сейчас апрель — самое время подключиться, чтобы к лету ваши закупщики уже работали через нас, не возили с собой наличку и не боялись проверок».</p></div></div>
+    </details>
+    
+    <details class="detail-card"  id="8-конкурентные-преимущества">
+      <summary>8. Конкурентные преимущества</summary>
+      <div class="detail-body"><div class="section-copy"><div class="table-wrap"><table class="academy-table searchable"><thead><tr><th>Что важно для клиента</th><th>Как отвечаем мы</th></tr></thead><tbody><tr><td>Нет сложных интеграций</td><td>Универсальный кабинет — просто загрузка реестра, без API, без диспетчерских.</td></tr><tr><td>Нужны закрывающие документы</td><td>Формируем закупочные акты по шаблону, подстраиваем под требования клиента.</td></tr><tr><td>Малый бизнес с бюджетом</td><td>Нет абонентской платы, только комиссия банка. Бесплатная автоматизация.</td></tr><tr><td>Сезонные выплаты</td><td>Гибкие лимиты (до 5 млн руб. в месяц для вторсырья и дикоросов) — можно работать под конкретный сезон.</td></tr><tr><td>Потребность в онбординге</td><td>Мы не оставляем клиента: если ему нужно поднять договоры или подключить кассу — направим к партнерам (налог-такси, Atoll).</td></tr></tbody></table></div></div></div>
+    </details>
+    
+    <details class="detail-card"  id="9-резюме-что-запомнит">
+      <summary>9. Резюме: Что запомнить</summary>
+      <div class="detail-body"><div class="section-copy"><p class="text searchable">Реестровые выплаты — это исторически первый продукт компании, который сегодня трансформировался в универсальный кабинет.</p><p class="text searchable">Он нужен трем категориям клиентов: «старой гвардии», неклассифицированным отраслям и малому бизнесу с числом исполнителей до 50 человек.</p><p class="text searchable">Вторсырье — большой сегмент (палеты, картон, резина, пластик, стекло). Его ключевое отличие от лома: возможность для клиента быть полным производителем (с НДС) и отсутствие требования офлайн-кассы.</p><p class="text searchable">Дикоросы — сезонный рынок с оборотом ~100 млрд руб. Особенности: наличные до сих пор популярны, сдатчики — физики с льготой по НДФЛ до 250 тыс. руб. в год, региональная монополия (2–3 игрока). Продавать нужно весной, до начала сезона.</p><p class="text searchable">Универсальный кабинет — это стартовая площадка. Клиент может начать с него, а потом «дорасти» до более сложных решений (лом, такси, авто), если бизнес масштабируется.</p><p class="text searchable">Наши преимущества: простота, бесплатность (для малого бизнеса), гибкая настройка документов, поддержка на всех этапах.</p></div></div>
+    </details>
+    </div>
+      </article>
+
+      <article class="quiz-card glass" data-quiz='[{&quot;q&quot;: &quot;Для кого лучше всего подходит универсальный кабинет?&quot;, &quot;options&quot;: [&quot;Только для крупнейших сетей&quot;, &quot;Для клиентов без сложной интеграции и с небольшим числом исполнителей&quot;, &quot;Только для бьюти&quot;, &quot;Только для авто&quot;], &quot;answer&quot;: 1}, {&quot;q&quot;: &quot;Что является одним из ключевых отличий вторсырья от лома в лекции?&quot;, &quot;options&quot;: [&quot;Во вторсырье всегда нужна офлайн-касса&quot;, &quot;Во вторсырье часто достаточно онлайн-кассы, а не офлайн-кассы как в ломе&quot;, &quot;Во вторсырье нет документов&quot;, &quot;Во вторсырье запрещены выплаты&quot;], &quot;answer&quot;: 1}, {&quot;q&quot;: &quot;Когда лучше всего продавать решение для дикоросов?&quot;, &quot;options&quot;: [&quot;После окончания сезона&quot;, &quot;Весной, до начала сезона&quot;, &quot;Только зимой&quot;, &quot;В любой момент без разницы&quot;], &quot;answer&quot;: 1}, {&quot;q&quot;: &quot;Какой формат запуска предлагается клиенту для снижения порога входа?&quot;, &quot;options&quot;: [&quot;Сразу сложная ERP-интеграция&quot;, &quot;Тест-драйв на универсальном кабинете&quot;, &quot;Только офлайн-касса&quot;, &quot;Переход на наличку&quot;], &quot;answer&quot;: 1}, {&quot;q&quot;: &quot;Во что может вырасти клиент после старта на Lite?&quot;, &quot;options&quot;: [&quot;Только в отказ от сервиса&quot;, &quot;В более сложные отраслевые решения Mozen&quot;, &quot;В маркетплейс&quot;, &quot;В страховую компанию&quot;], &quot;answer&quot;: 1}]'>
+        <div class="quiz-head">
+          <div>
+            <div class="card-kicker">Проверка знаний</div>
+            <h3>Мини-тест по блоку</h3>
+          </div>
+          <button class="ghost-btn run-quiz">Проверить ответы</button>
+        </div>
+        <div class="quiz-questions"></div>
+        <div class="quiz-result"></div>
+      </article>
+    </section>
+    
+    </main>
+  </div>
+
+  <script>
+    const modules = Array.from(document.querySelectorAll('.module'));
+    const sideLinks = Array.from(document.querySelectorAll('#sideNav a'));
+    const navLinks = Array.from(document.querySelectorAll('.nav-card'));
+    const progressBar = document.getElementById('progressBar');
+    const scrollTopBtn = document.getElementById('scrollTopBtn');
+    const searchInput = document.getElementById('globalSearch');
+    const compactMode = document.getElementById('compactMode');
+    const hideCompleted = document.getElementById('hideCompleted');
+    const expandAllBtn = document.getElementById('expandAllBtn');
+
+    function updateProgress() {
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      const percent = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
+      progressBar.style.width = percent + '%';
+      scrollTopBtn.classList.toggle('visible', window.scrollY > 500);
+    }
+
+    function setActiveSection() {
+      let currentId = modules[0]?.id;
+      modules.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= 160) currentId = section.id;
+      });
+      [...sideLinks, ...navLinks].forEach(link => {
+        const href = (link.getAttribute('href') || '').replace('#', '');
+        link.classList.toggle('active', href === currentId);
+      });
+    }
+
+    function highlightText(element, query) {
+      if (!element.dataset.rawHtml) element.dataset.rawHtml = element.innerHTML;
+      if (!query) {
+        element.innerHTML = element.dataset.rawHtml;
+        return;
+      }
+      const safeQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex = new RegExp('(' + safeQuery + ')', 'gi');
+      element.innerHTML = element.dataset.rawHtml.replace(regex, '<mark>$1</mark>');
+    }
+
+    function performSearch() {
+      const query = searchInput.value.trim().toLowerCase();
+      modules.forEach(module => {
+        const searchable = Array.from(module.querySelectorAll('.searchable'));
+        let matched = !query;
+        searchable.forEach(node => {
+          highlightText(node, query);
+          if (query && node.textContent.toLowerCase().includes(query)) matched = true;
+        });
+        module.classList.toggle('hidden-by-search', !matched);
+      });
+      navLinks.forEach(link => {
+        const target = document.querySelector(link.getAttribute('href'));
+        link.classList.toggle('hidden-by-search', target?.classList.contains('hidden-by-search'));
+      });
+      sideLinks.forEach(link => {
+        const target = document.querySelector(link.getAttribute('href'));
+        link.classList.toggle('hidden-by-search', target?.classList.contains('hidden-by-search'));
+      });
+    }
+
+    function applyCompactMode() {
+      document.querySelectorAll('.full-only').forEach(node => {
+        node.classList.toggle('compact-hidden', compactMode.checked);
+      });
+      localStorage.setItem('mozen_compact_mode', compactMode.checked ? '1' : '0');
+    }
+
+    function applyCompletedFilter() {
+      const completed = JSON.parse(localStorage.getItem('mozen_completed_modules') || '[]');
+      modules.forEach(module => {
+        const isCompleted = completed.includes(module.id);
+        module.classList.toggle('completed', isCompleted);
+        if (hideCompleted.checked && isCompleted) {
+          module.classList.add('hidden-by-search');
+        } else if (!searchInput.value.trim()) {
+          module.classList.remove('hidden-by-search');
+        }
+      });
+      navLinks.forEach(link => {
+        const target = document.querySelector(link.getAttribute('href'));
+        link.classList.toggle('hidden-by-search', target?.classList.contains('hidden-by-search'));
+      });
+      sideLinks.forEach(link => {
+        const target = document.querySelector(link.getAttribute('href'));
+        link.classList.toggle('hidden-by-search', target?.classList.contains('hidden-by-search'));
+      });
+      localStorage.setItem('mozen_hide_completed', hideCompleted.checked ? '1' : '0');
+    }
+
+    function toggleComplete(moduleId) {
+      const current = JSON.parse(localStorage.getItem('mozen_completed_modules') || '[]');
+      const next = current.includes(moduleId)
+        ? current.filter(id => id !== moduleId)
+        : [...current, moduleId];
+      localStorage.setItem('mozen_completed_modules', JSON.stringify(next));
+      applyCompletedFilter();
+    }
+
+    document.querySelectorAll('.mark-complete').forEach(btn => {
+      btn.addEventListener('click', () => toggleComplete(btn.dataset.target));
+    });
+
+    document.querySelectorAll('.module-notes').forEach(area => {
+      const key = 'mozen_note_' + area.dataset.notes;
+      area.value = localStorage.getItem(key) || '';
+      area.addEventListener('input', () => localStorage.setItem(key, area.value));
+    });
+
+    document.querySelectorAll('.section-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const container = btn.closest('.transcript');
+        const details = Array.from(container.querySelectorAll('details'));
+        const shouldOpen = btn.dataset.mode !== 'collapse';
+        details.forEach(d => d.open = shouldOpen);
+        btn.dataset.mode = shouldOpen ? 'collapse' : 'expand';
+        btn.textContent = shouldOpen ? 'Свернуть все' : 'Раскрыть все';
+      });
+    });
+
+    expandAllBtn.addEventListener('click', () => {
+      document.querySelectorAll('.details-stack details').forEach(d => d.open = true);
+      document.querySelectorAll('.section-toggle').forEach(btn => {
+        btn.dataset.mode = 'collapse';
+        btn.textContent = 'Свернуть все';
+      });
+      compactMode.checked = false;
+      applyCompactMode();
+      window.location.hash = '#modules';
+    });
+
+    scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    searchInput.addEventListener('input', () => {
+      performSearch();
+      if (hideCompleted.checked) applyCompletedFilter();
+    });
+    compactMode.addEventListener('change', applyCompactMode);
+    hideCompleted.addEventListener('change', applyCompletedFilter);
+
+    function renderQuiz(card) {
+      const data = JSON.parse(card.dataset.quiz);
+      const wrap = card.querySelector('.quiz-questions');
+      wrap.innerHTML = data.map((item, index) => `
+        <div class="quiz-item">
+          <h4>${index + 1}. ${item.q}</h4>
+          <div class="quiz-options">
+            ${item.options.map((option, optionIndex) => `
+              <label class="quiz-option">
+                <input type="radio" name="quiz-${card.closest('.module').id}-${index}" value="${optionIndex}" />
+                <span>${option}</span>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    document.querySelectorAll('.quiz-card').forEach(card => {
+      renderQuiz(card);
+      const btn = card.querySelector('.run-quiz');
+      const result = card.querySelector('.quiz-result');
+      btn.addEventListener('click', () => {
+        const data = JSON.parse(card.dataset.quiz);
+        let correct = 0;
+        const items = Array.from(card.querySelectorAll('.quiz-item'));
+        items.forEach((item, qIndex) => {
+          const selected = item.querySelector('input[type="radio"]:checked');
+          const options = Array.from(item.querySelectorAll('.quiz-option'));
+          options.forEach((opt, optIndex) => {
+            opt.classList.remove('correct', 'wrong');
+            if (optIndex === data[qIndex].answer) opt.classList.add('correct');
+          });
+          if (selected && Number(selected.value) === data[qIndex].answer) {
+            correct += 1;
+          } else if (selected) {
+            selected.closest('.quiz-option')?.classList.add('wrong');
+          }
+        });
+        const percent = Math.round((correct / data.length) * 100);
+        let note = 'Неплохо, но лучше еще раз пройтись по алгоритму разговора и ключевым аргументам.';
+        if (percent >= 90) note = 'Отличный результат. Этот блок можно считать хорошо усвоенным.';
+        else if (percent >= 70) note = 'Хорошо. Осталось укрепить детали и формулировки.';
+        result.classList.add('visible');
+        result.innerHTML = `<strong>Результат: ${correct} / ${data.length} (${percent}%)</strong><br>${note}`;
+      });
+    });
+
+    // restore settings
+    compactMode.checked = localStorage.getItem('mozen_compact_mode') === '1';
+    hideCompleted.checked = localStorage.getItem('mozen_hide_completed') === '1';
+    applyCompactMode();
+    applyCompletedFilter();
+
+    window.addEventListener('scroll', () => {
+      updateProgress();
+      setActiveSection();
+    });
+    window.addEventListener('load', () => {
+      updateProgress();
+      setActiveSection();
+      performSearch();
+    });
+  </script>
+</body>
+</html>
